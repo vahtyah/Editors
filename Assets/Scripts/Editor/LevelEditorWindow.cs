@@ -74,6 +74,7 @@ public class LevelEditorWindow : EditorWindow
         {
             if (GUILayout.Toggle(currentPanel == kvp.Key, kvp.Value.Name, EditorStyles.toolbarButton, GUILayout.ExpandWidth(true)))
             {
+                
                 currentPanel = kvp.Key;
             }
         }

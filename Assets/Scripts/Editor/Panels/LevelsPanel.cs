@@ -161,7 +161,7 @@ public class LevelsPanel : EditorPanel
         {
             EditorGUIHelper.DrawCenteredLabel("No levels found");
             EditorGUILayout.Space(LevelEditorStyles.Spacing.Small);
-            
+
             if (EditorGUIHelper.DrawButton("Create First Level", 0, LevelEditorStyles.Sizes.ButtonHeight))
             {
                 showCreateNewLevel = true;
