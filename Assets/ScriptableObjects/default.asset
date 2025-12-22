@@ -15,7 +15,7 @@ MonoBehaviour:
   styles:
   - name: Style 1
     enableHeader: 1
-    enableSearch: 0
+    enableSearch: 1
     enableFooterAddButton: 1
     enableFooterRemoveButton: 1
     enableElementRemoveButton: 0
@@ -140,7 +140,7 @@ MonoBehaviour:
       height: 20
       marginRight: 10
       spaceBetweenButtons: 0
-      paddingTop: -5
+      paddingTop: 4
       paddingLeft: 4
       paddingRight: 4
       buttonsWidth: 25
@@ -169,7 +169,7 @@ MonoBehaviour:
             right: 0
             top: 0
             bottom: 0
-          borderWidth: {x: 1, y: 0, z: 1, w: 1}
+          borderWidth: {x: 2, y: 0, z: 2, w: 2}
           borderRadius: {x: 0, y: 0, z: 4, w: 4}
     globalBackground:
       backgroundConfig:

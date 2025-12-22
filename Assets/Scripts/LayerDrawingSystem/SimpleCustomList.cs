@@ -1176,10 +1176,12 @@ namespace Tyah.List
 
             if (enableFooterAddButton && enableFooterRemoveButton)
                 leftEdge -= 25;
+            
+            float borderBackground = globalBackgroundConfig.GetLayerByType(LayerType.Border)?.borderWidth.z ?? 0;
 
             buttonsRect.Set(
                 leftEdge,
-                footerButtonsRect.y,
+                footerButtonsRect.y - borderBackground,
                 rightEdge - leftEdge,
                 FOOTER_HEIGHT
             );

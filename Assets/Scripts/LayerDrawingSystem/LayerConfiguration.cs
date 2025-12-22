@@ -38,6 +38,18 @@ namespace CustomLayerDrawing
             newLayers[layers.Length] = layer;
             layers = newLayers;
         }
+        
+        public Layer GetLayerByType(LayerType type)
+        {
+            foreach (var layer in layers)
+            {
+                if (layer.type == type)
+                {
+                    return layer;
+                }
+            }
+            return null;
+        }
 
         /// <summary>
         /// Tạo config mẫu - Background đơn giản
