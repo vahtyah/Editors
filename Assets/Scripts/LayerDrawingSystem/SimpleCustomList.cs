@@ -1040,13 +1040,7 @@ namespace Tyah.List
             // Draw drag handle
             if (currentEvent.type == EventType.Repaint)
             {
-                Rect dragRect = new Rect(
-                    rect.x + 5,
-                    rect.yMax - 6 - 6,
-                    DRAG_HANDLE_WIDTH,
-                    6
-                );
-
+                Rect dragRect = GetDragHandleRect(rect);
                 GUIStyle dragStyle = new GUIStyle("RL DragHandle");
                 dragStyle.Draw(dragRect, false, false, false, false);
             }
@@ -1154,14 +1148,23 @@ namespace Tyah.List
                 currentEvent.Use();
             }
 
-            // Track mouse down for drag detection - CHỈ KHI KHÔNG ĐANG DRAG
-            if (!dragging && currentEvent.type == EventType.MouseDown &&
-                rect.Contains(currentEvent.mousePosition) &&
-                currentEvent.button == 0)
+            // Track mouse down for drag detection - CHỈ KHI CLICK VÀO DRAG ICON
+            if (!dragging && currentEvent.type == EventType.MouseDown && currentEvent.button == 0)
             {
-                lastMouseDownPosition = currentEvent.mousePosition;
-                lastMouseDownIndex = index;
-                lastMouseDownHeight = rect.height;
+                // Tính vị trí của drag handle icon
+                Rect dragHandleRect = GetDragHandleRect(rect);
+                
+                // Mở rộng vùng click cho dễ click hơn (thêm 3px trên dưới)
+                dragHandleRect.yMin -= 3;
+                dragHandleRect.yMax += 3;
+                
+                // Chỉ cho phép drag khi click vào drag handle
+                if (dragHandleRect.Contains(currentEvent.mousePosition))
+                {
+                    lastMouseDownPosition = currentEvent.mousePosition;
+                    lastMouseDownIndex = index;
+                    lastMouseDownHeight = rect.height;
+                }
             }
         }
 
@@ -1789,6 +1792,17 @@ namespace Tyah.List
             UndoCallback($"Remove {elementName}");
             removeElementCallback?.Invoke();
             listChangedCallback?.Invoke();
+        }
+
+        // Helper method để tính toán vị trí drag handle
+        private Rect GetDragHandleRect(Rect elementRect)
+        {
+            return new Rect(
+                elementRect.x + 5,
+                elementRect.yMax - 6 - 6,
+                DRAG_HANDLE_WIDTH,
+                6
+            );
         }
 
         #endregion

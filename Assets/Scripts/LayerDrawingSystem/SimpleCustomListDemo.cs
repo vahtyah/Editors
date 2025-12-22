@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using Watermelon.List;
 using Random = UnityEngine.Random;
-using SimpleCustomList = Watermelon.List.SimpleCustomList;
+using SimpleCustomList = Tyah.List.SimpleCustomList;
 
 public class SimpleCustomListDemo :  EditorWindow
 {
