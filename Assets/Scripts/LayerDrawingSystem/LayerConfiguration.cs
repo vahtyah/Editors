@@ -3,9 +3,6 @@ using UnityEngine;
 
 namespace CustomLayerDrawing
 {
-    /// <summary>
-    /// Cấu hình chứa nhiều layer để vẽ
-    /// </summary>
     [Serializable]
     public class LayerConfiguration
     {
@@ -25,9 +22,6 @@ namespace CustomLayerDrawing
             }
         }
 
-        /// <summary>
-        /// Thêm layer mới
-        /// </summary>
         public void AddLayer(Layer layer)
         {
             Layer[] newLayers = new Layer[layers.Length + 1];
@@ -35,10 +29,11 @@ namespace CustomLayerDrawing
             {
                 newLayers[i] = layers[i];
             }
+
             newLayers[layers.Length] = layer;
             layers = newLayers;
         }
-        
+
         public Layer GetLayerByType(LayerType type)
         {
             foreach (var layer in layers)
@@ -48,12 +43,10 @@ namespace CustomLayerDrawing
                     return layer;
                 }
             }
+
             return null;
         }
 
-        /// <summary>
-        /// Tạo config mẫu - Background đơn giản
-        /// </summary>
         public static LayerConfiguration CreateSimpleBackground(Color color)
         {
             LayerConfiguration config = new LayerConfiguration(1);
@@ -61,43 +54,33 @@ namespace CustomLayerDrawing
             return config;
         }
 
-        /// <summary>
-        /// Tạo config mẫu - Background với viền
-        /// </summary>
-        public static LayerConfiguration CreateBackgroundWithBorder(Color backgroundColor, Color borderColor, float borderWidth = 1f, float borderRadius = 0f)
+        public static LayerConfiguration CreateBackgroundWithBorder(Color backgroundColor, Color borderColor,
+            float borderWidth = 1f, float borderRadius = 0f)
         {
             LayerConfiguration config = new LayerConfiguration(2);
-            
-            // Layer 1: Background
+
             config.layers[0] = Layer.CreateRoundedRect(backgroundColor, borderRadius);
-            
-            // Layer 2: Border (đè lên)
+
             config.layers[1] = Layer.CreateBorder(borderColor, borderWidth, borderRadius);
-            
+
             return config;
         }
 
-        /// <summary>
-        /// Tạo config mẫu - Card style với shadow
-        /// </summary>
         public static LayerConfiguration CreateCardStyle(Color cardColor, Color shadowColor, float cornerRadius = 4f)
         {
             LayerConfiguration config = new LayerConfiguration(2);
-            
+
             // Layer 1: Shadow (offset xuống và phải một chút)
             config.layers[0] = Layer.CreateRoundedRect(shadowColor, cornerRadius);
             config.layers[0].padding = new Padding(0, 2, 2, 0); // Offset shadow
-            
+
             // Layer 2: Card chính
             config.layers[1] = Layer.CreateRoundedRect(cardColor, cornerRadius);
-            
+
             return config;
         }
     }
 
-    /// <summary>
-    /// Một layer đơn lẻ
-    /// </summary>
     [Serializable]
     public class Layer
     {
@@ -114,9 +97,6 @@ namespace CustomLayerDrawing
         {
         }
 
-        /// <summary>
-        /// Tạo layer màu đặc
-        /// </summary>
         public static Layer CreateSolidColor(Color color, Padding padding = null)
         {
             Layer layer = new Layer();
@@ -126,10 +106,8 @@ namespace CustomLayerDrawing
             return layer;
         }
 
-        /// <summary>
-        /// Tạo layer viền
-        /// </summary>
-        public static Layer CreateBorder(Color color, float borderWidth = 1f, float borderRadius = 0f, Padding padding = null)
+        public static Layer CreateBorder(Color color, float borderWidth = 1f, float borderRadius = 0f,
+            Padding padding = null)
         {
             Layer layer = new Layer();
             layer.type = LayerType.Border;
@@ -140,9 +118,6 @@ namespace CustomLayerDrawing
             return layer;
         }
 
-        /// <summary>
-        /// Tạo layer hình chữ nhật bo góc
-        /// </summary>
         public static Layer CreateRoundedRect(Color color, float borderRadius = 4f, Padding padding = null)
         {
             Layer layer = new Layer();
@@ -154,10 +129,8 @@ namespace CustomLayerDrawing
             return layer;
         }
 
-        /// <summary>
-        /// Tạo layer gradient
-        /// </summary>
-        public static Layer CreateGradient(Color startColor, Color endColor, GradientDirection direction = GradientDirection.Vertical, Padding padding = null)
+        public static Layer CreateGradient(Color startColor, Color endColor,
+            GradientDirection direction = GradientDirection.Vertical, Padding padding = null)
         {
             Layer layer = new Layer();
             layer.type = LayerType.Gradient;
@@ -169,9 +142,6 @@ namespace CustomLayerDrawing
         }
     }
 
-    /// <summary>
-    /// Padding cho layer
-    /// </summary>
     [Serializable]
     public class Padding
     {
@@ -205,21 +175,15 @@ namespace CustomLayerDrawing
         }
     }
 
-    /// <summary>
-    /// Loại layer
-    /// </summary>
     [Serializable]
     public enum LayerType
     {
-        SolidColor,     // Màu đặc
-        Border,         // Chỉ viền
-        RoundedRect,    // Hình chữ nhật bo góc đầy đủ
-        Gradient        // Gradient
+        SolidColor,
+        Border,
+        RoundedRect,
+        Gradient
     }
 
-    /// <summary>
-    /// Hướng gradient
-    /// </summary>
     [Serializable]
     public enum GradientDirection
     {
@@ -227,4 +191,3 @@ namespace CustomLayerDrawing
         Vertical
     }
 }
-

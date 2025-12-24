@@ -34,9 +34,9 @@ namespace Tyah.List
         private Rect globalRect;
         private Rect headerRect;
         private Rect headerContentRect;
-        private Rect searchRect; // ← THÊM
-        private Rect searchFieldRect; // ← THÊM
-        private Rect searchClearButtonRect; // ← THÊM
+        private Rect searchRect;
+        private Rect searchFieldRect;
+        private Rect searchClearButtonRect;
         private Rect listRect;
         private Rect listContentRect;
         private Rect footerPaginationRect;
@@ -73,7 +73,7 @@ namespace Tyah.List
         private Event currentEvent;
         private int prevIndent;
         private Rect calculatedGlobalRect;
-        private EditorWindow parentWindow; // ← THÊM (để repaint)
+        private EditorWindow parentWindow;
         private CustomListStyle currentCustomStyle;
 
         // Drag & Drop
@@ -91,10 +91,10 @@ namespace Tyah.List
         private float mouseYinList = 0;
         private bool isSelected = false;
 
-        // ✅ THÊM: Double-click detection
+        //Double-click detection
         private double lastClickTime = 0;
         private int lastClickedIndex = -1;
-        private const double DOUBLE_CLICK_TIME = 0.3; // 300ms
+        private const double DOUBLE_CLICK_TIME = 0.3;
 
         // Element display
         private float collapsedElementHeight = 20;
@@ -148,9 +148,9 @@ namespace Tyah.List
         public ListReorderedCallbackDelegate listReorderedCallback;
         public ListReorderedCallbackWithDetailsDelegate listReorderedCallbackWithDetails;
         public DisplayContextMenuCallbackDelegate displayContextMenuCallback;
-        public ListUndoCallbackDelegate listUndoCallback; // ← THÊM
-        public ElementDoubleClickedDelegate elementDoubleClickedCallback; // ← THÊM
-        public SearchFilterDelegate searchFilterCallback; // ← THÊM
+        public ListUndoCallbackDelegate listUndoCallback;
+        public ElementDoubleClickedDelegate elementDoubleClickedCallback;
+        public SearchFilterDelegate searchFilterCallback;
 
         // Settings
         public bool enableHeader = false;
@@ -158,12 +158,12 @@ namespace Tyah.List
         public bool enableFooterRemoveButton = true;
         public bool enableElementRemoveButton = false;
         public bool ignoreDragEvents = false;
-        public bool enableSearch = false; // ← THÊM
+        public bool enableSearch = false;
 
         // Search state
-        private string searchQuery = ""; // ← THÊM
-        private List<int> filteredIndices = new List<int>(); // ← THÊM
-        private bool isSearchActive = false; // ← THÊM
+        private string searchQuery = "";
+        private List<int> filteredIndices = new List<int>();
+        private bool isSearchActive = false;
 
         //mesages
         private string emptyListMessage = "List is empty";
@@ -227,7 +227,7 @@ namespace Tyah.List
 
         // Constants
         private const float HEADER_HEIGHT = 20f;
-        private const float SEARCH_HEIGHT = 22f; // ← THÊM
+        private const float SEARCH_HEIGHT = 22f;
         private const float PAGINATION_HEIGHT = 20f;
         private const float FOOTER_HEIGHT = 20f;
         private const float DRAG_HANDLE_WIDTH = 10f;
@@ -337,7 +337,6 @@ namespace Tyah.List
         {
             if (currentCustomStyle == null)
             {
-                // Fallback to default
                 InitializeDefaultLayerConfigurations();
                 return;
             }
@@ -356,10 +355,10 @@ namespace Tyah.List
 
         private void InitializeDefaultLayerConfigurations()
         {
-            // Global Background (rounded border với fill)
+            // Global Background
             globalBackgroundConfig = new LayerConfiguration(2);
 
-            // Layer 1: Background fill màu xám đậm
+            // Layer 1: Background
             globalBackgroundConfig.layers[0] = new Layer();
             globalBackgroundConfig.layers[0].type = LayerType.RoundedRect;
             globalBackgroundConfig.layers[0].color = new Color(0.302f, 0.302f, 0.302f, 1f);
@@ -367,7 +366,7 @@ namespace Tyah.List
             globalBackgroundConfig.layers[0].borderRadius = Vector4.one * 4f;
             globalBackgroundConfig.layers[0].padding = new Padding(0, 0, 1, 21);
 
-            // Layer 2: Border outline màu đen
+            // Layer 2: Border outline
             globalBackgroundConfig.layers[1] = new Layer();
             globalBackgroundConfig.layers[1].type = LayerType.Border;
             globalBackgroundConfig.layers[1].color = new Color(0.141f, 0.141f, 0.141f, 1f);
@@ -384,7 +383,7 @@ namespace Tyah.List
             headerBackgroundConfig.layers[0].borderRadius = Vector4.zero;
             headerBackgroundConfig.layers[0].padding = new Padding();
 
-            // List Background (transparent)
+            // List Background
             listBackgroundConfig = new LayerConfiguration(0);
 
             // Pagination Background
@@ -565,7 +564,7 @@ namespace Tyah.List
 
             // Handle drag & drop detection
             if (currentEvent.isMouse && ArraySize() > 0 &&
-                currentEvent.type != EventType.Used && !ignoreDragEvents && !isSearchActive) // ← THÊM ! isSearchActive
+                currentEvent.type != EventType.Used && !ignoreDragEvents && !isSearchActive)
             {
                 HandleDraggingDetection();
             }
