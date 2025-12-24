@@ -569,6 +569,11 @@ namespace Tyah.List
             {
                 HandleDraggingDetection();
             }
+            
+            if (currentEvent.type == EventType.ScrollWheel && ArraySize() > 0)
+            {
+                HandleScrollWheel();
+            }
 
             if (currentEvent.type == EventType.KeyDown && ArraySize() > 0)
             {
@@ -1722,6 +1727,49 @@ namespace Tyah.List
 
             if (handled)
             {
+                currentEvent.Use();
+                RequestRepaint();
+            }
+        }
+
+        #endregion
+        
+        #region Scroll Wheel Navigation
+
+        private void HandleScrollWheel()
+        {
+            if (! enablePagination)
+                return;
+
+            if (! listRect.Contains(currentEvent.mousePosition))
+                return;
+
+            if (currentEvent.type != EventType.ScrollWheel)
+                return;
+
+            float scrollDelta = currentEvent.delta. y;
+            bool handled = false;
+
+            if (scrollDelta > 0)
+            {
+                if (currentPage < pagesCount - 1)
+                {
+                    currentPage++;
+                    handled = true;
+                }
+            }
+            else if (scrollDelta < 0)
+            {
+                if (currentPage > 0)
+                {
+                    currentPage--;
+                    handled = true;
+                }
+            }
+
+            if (handled)
+            {
+                selectedIndex = -1;
                 currentEvent.Use();
                 RequestRepaint();
             }
