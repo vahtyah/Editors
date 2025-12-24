@@ -164,7 +164,7 @@ namespace Tyah.List
         private string searchQuery = ""; // ← THÊM
         private List<int> filteredIndices = new List<int>(); // ← THÊM
         private bool isSearchActive = false; // ← THÊM
-        
+
         //mesages
         private string emptyListMessage = "List is empty";
         private string noResultsMessage = "No results found";
@@ -325,7 +325,7 @@ namespace Tyah.List
             stretchWidth = currentCustomStyle.stretchWidth;
 
             collapsedElementHeight = currentCustomStyle.element.collapsedElementHeight;
-            
+
             emptyListMessage = currentCustomStyle.emptyListMessage;
             noResultsMessage = currentCustomStyle.noResultsMessage;
 
@@ -569,7 +569,7 @@ namespace Tyah.List
             {
                 HandleDraggingDetection();
             }
-            
+
             if (currentEvent.type == EventType.ScrollWheel && ArraySize() > 0)
             {
                 HandleScrollWheel();
@@ -973,6 +973,7 @@ namespace Tyah.List
             LayerDrawingSystem.DrawLayers(footerPaginationRect, paginationBackgroundConfig);
 
             GUIStyle buttonStyle = new GUIStyle("RL FooterButton");
+            buttonStyle.contentOffset = new Vector2(0, -1);
             GUIStyle labelStyle = new GUIStyle(GUI.skin.label);
             labelStyle.alignment = TextAnchor.MiddleCenter;
 
@@ -1158,11 +1159,11 @@ namespace Tyah.List
             {
                 // Tính vị trí của drag handle icon
                 Rect dragHandleRect = GetDragHandleRect(rect);
-                
+
                 // Mở rộng vùng click cho dễ click hơn (thêm 3px trên dưới)
                 dragHandleRect.yMin -= 3;
                 dragHandleRect.yMax += 3;
-                
+
                 // Chỉ cho phép drag khi click vào drag handle
                 if (dragHandleRect.Contains(currentEvent.mousePosition))
                 {
@@ -1181,7 +1182,7 @@ namespace Tyah.List
 
             if (enableFooterAddButton && enableFooterRemoveButton)
                 leftEdge -= 25;
-            
+
             float borderBackground = globalBackgroundConfig.GetLayerByType(LayerType.Border)?.borderWidth.z ?? 0;
 
             buttonsRect.Set(
@@ -1733,21 +1734,21 @@ namespace Tyah.List
         }
 
         #endregion
-        
+
         #region Scroll Wheel Navigation
 
         private void HandleScrollWheel()
         {
-            if (! enablePagination)
+            if (!enablePagination)
                 return;
 
-            if (! listRect.Contains(currentEvent.mousePosition))
+            if (!listRect.Contains(currentEvent.mousePosition))
                 return;
 
             if (currentEvent.type != EventType.ScrollWheel)
                 return;
 
-            float scrollDelta = currentEvent.delta. y;
+            float scrollDelta = currentEvent.delta.y;
             bool handled = false;
 
             if (scrollDelta > 0)
