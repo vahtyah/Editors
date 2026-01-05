@@ -1,21 +1,12 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-namespace CustomLayerDrawing
+namespace VahTyah
 {
-    /// <summary>
-    /// System vẽ nhiều layer background chồng lên nhau
-    /// Sử dụng: LayerDrawingSystem.DrawLayers(rect, layerConfig);
-    /// </summary>
     public static class LayerDrawingSystem
     {
         private static Rect tempRect = new Rect();
 
-        /// <summary>
-        /// Vẽ nhiều layer background lên một vùng Rect
-        /// </summary>
-        /// <param name="targetRect">Vùng cần vẽ</param>
-        /// <param name="config">Cấu hình các layer</param>
         public static void DrawLayers(Rect targetRect, LayerConfiguration config)
         {
             if (Event.current.type != EventType.Repaint || config == null || config.layers == null)
@@ -35,15 +26,10 @@ namespace CustomLayerDrawing
             }
         }
 
-        /// <summary>
-        /// Vẽ một layer đơn lẻ
-        /// </summary>
         private static void DrawSingleLayer(Rect targetRect, Layer layer)
         {
-            // Tính toán vùng vẽ thực tế (có padding)
             CalculateLayerRect(targetRect, layer, out tempRect);
 
-            // Vẽ theo loại layer
             switch (layer.type)
             {
                 case LayerType.SolidColor:
@@ -64,9 +50,6 @@ namespace CustomLayerDrawing
             }
         }
 
-        /// <summary>
-        /// Tính toán Rect với padding
-        /// </summary>
         private static void CalculateLayerRect(Rect originalRect, Layer layer, out Rect result)
         {
             result = new Rect();
@@ -76,17 +59,11 @@ namespace CustomLayerDrawing
             result.yMax = originalRect.yMax - layer.padding.bottom;
         }
 
-        /// <summary>
-        /// Vẽ hình chữ nhật màu đặc
-        /// </summary>
         private static void DrawSolidColor(Rect rect, Layer layer)
         {
             EditorGUI.DrawRect(rect, layer.color);
         }
 
-        /// <summary>
-        /// Vẽ viền với bo góc
-        /// </summary>
         private static void DrawBorder(Rect rect, Layer layer)
         {
             GUI.DrawTexture(
@@ -101,9 +78,6 @@ namespace CustomLayerDrawing
             );
         }
 
-        /// <summary>
-        /// Vẽ hình chữ nhật bo góc đầy đủ
-        /// </summary>
         private static void DrawRoundedRect(Rect rect, Layer layer)
         {
             GUI.DrawTexture(
@@ -118,20 +92,13 @@ namespace CustomLayerDrawing
             );
         }
 
-        /// <summary>
-        /// Vẽ gradient
-        /// </summary>
         private static void DrawGradient(Rect rect, Layer layer)
         {
-            // Tạo texture gradient tạm thời
             Texture2D gradientTexture = CreateGradientTexture(layer.color, layer.gradientEndColor, layer.gradientDirection);
             GUI.DrawTexture(rect, gradientTexture, ScaleMode.StretchToFill);
             Object.DestroyImmediate(gradientTexture);
         }
 
-        /// <summary>
-        /// Tạo texture gradient
-        /// </summary>
         private static Texture2D CreateGradientTexture(Color startColor, Color endColor, GradientDirection direction)
         {
             int width = direction == GradientDirection.Horizontal ? 256 : 1;

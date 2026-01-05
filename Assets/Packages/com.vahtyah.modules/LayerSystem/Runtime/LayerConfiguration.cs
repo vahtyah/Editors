@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace CustomLayerDrawing
+namespace VahTyah
 {
     [Serializable]
     public class LayerConfiguration
@@ -10,7 +10,7 @@ namespace CustomLayerDrawing
 
         public LayerConfiguration()
         {
-            layers = new Layer[0];
+            layers = Array.Empty<Layer>();
         }
 
         public LayerConfiguration(int layerCount)
@@ -68,14 +68,18 @@ namespace CustomLayerDrawing
 
         public static LayerConfiguration CreateCardStyle(Color cardColor, Color shadowColor, float cornerRadius = 4f)
         {
-            LayerConfiguration config = new LayerConfiguration(2);
-
-            // Layer 1: Shadow (offset xuống và phải một chút)
-            config.layers[0] = Layer.CreateRoundedRect(shadowColor, cornerRadius);
-            config.layers[0].padding = new Padding(0, 2, 2, 0); // Offset shadow
-
-            // Layer 2: Card chính
-            config.layers[1] = Layer.CreateRoundedRect(cardColor, cornerRadius);
+            LayerConfiguration config = new LayerConfiguration(2)
+            {
+                layers =
+                {
+                    [0] = Layer.CreateRoundedRect(shadowColor, cornerRadius),
+                    [0] =
+                    {
+                        padding = new Padding(0, 2, 2, 0)
+                    },
+                    [1] = Layer.CreateRoundedRect(cardColor, cornerRadius)
+                }
+            };
 
             return config;
         }

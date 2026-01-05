@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace Watermelon.List
+namespace VahTyah.List
 {
     [CreateAssetMenu(fileName = "StylesDatabase", menuName = "Custom List/List Styles Database", order = 1)]
     public class ListStylesDatabase : ScriptableObject
     {
-        [SerializeField] private List<CustomListStyle> styles = new List<CustomListStyle>();
+        [SerializeField, BoxGroup("Components", "Components") ] private List<CustomListStyle> styles = new List<CustomListStyle>();
 
         public int StylesCount => styles.Count;
 

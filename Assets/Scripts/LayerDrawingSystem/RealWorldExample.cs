@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using CustomLayerDrawing;
+using VahTyah;
 
-namespace CustomLayerDrawing.Examples
+namespace VahTyah.Examples
 {
     /// <summary>
     /// Ví dụ thực tế: Custom Editor Window sử dụng Layer Drawing

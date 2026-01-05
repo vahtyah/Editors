@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEditor;
 using UnityEngine;
-using CustomLayerDrawing;
+using VahTyah;
 
-namespace Watermelon.List
+namespace VahTyah.List
 {
     [Serializable]
     public class CustomListStyle
@@ -126,6 +126,10 @@ namespace Watermelon.List
             );
             
             element.unselectedBackgroundConfig = new LayerConfiguration(0); // Transparent
+            element.hoverBackgroundConfig = new LayerConfiguration(1);
+            element.hoverBackgroundConfig.layers[0] = Layer.CreateSolidColor(
+                new Color(0.3f, 0.3f, 0.3f, .5f)
+            );
 
             // Drag Handle
             dragHandle = new DragHandle();
@@ -244,7 +248,7 @@ namespace Watermelon.List
             public float contentPaddingRight;
             public float contentPaddingTop;
             public float contentPaddingBottom;
-            public LayerConfiguration backgroundConfig; // ← Dùng trực tiếp
+            public LayerConfiguration backgroundConfig;
         }
 
         [Serializable]
@@ -256,8 +260,9 @@ namespace Watermelon.List
             public float headerPaddingTop;
             public float headerPaddingBottom;
             public Color textColor = Color.white;
-            public LayerConfiguration selectedBackgroundConfig; // ← Dùng trực tiếp
-            public LayerConfiguration unselectedBackgroundConfig; // ← Dùng trực tiếp
+            public LayerConfiguration selectedBackgroundConfig;
+            public LayerConfiguration unselectedBackgroundConfig;
+            public LayerConfiguration hoverBackgroundConfig;
         }
 
         [Serializable]

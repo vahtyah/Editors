@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Watermelon.List
+namespace VahTyah.List
 {
     /// <summary>
     /// Tính toán tất cả rectangles cho list components

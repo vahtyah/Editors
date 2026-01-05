@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Watermelon.List
+namespace VahTyah.List
 {
     /// <summary>
     /// Xử lý keyboard navigation

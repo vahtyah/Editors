@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-namespace Watermelon.List
+namespace VahTyah.List
 {
     /// <summary>
     /// Main coordinator class - delegates to specialized components

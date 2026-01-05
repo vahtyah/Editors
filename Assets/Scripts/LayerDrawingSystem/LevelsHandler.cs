@@ -8,7 +8,7 @@ using System.Text;
 using System;
 using Tyah.List;
 
-namespace Watermelon
+namespace VahTyah
 {
     public class LevelsHandler
     {
@@ -581,7 +581,7 @@ namespace Watermelon
 
         public void DrawRenameLevelsButton()
         {
-            if (GUILayout.Button(RENAME_LEVELS_LABEL, EditorStyles.miniButton))
+            if (GUILayout.Button(RENAME_LEVELS_LABEL, UnityEditor.EditorStyles.miniButton))
             {
                 RenameLevels();
             }
@@ -589,7 +589,7 @@ namespace Watermelon
 
         public void DrawClearSelectionButton()
         {
-            if (GUILayout.Button(REMOVE_SELECTION, EditorStyles.miniButton))
+            if (GUILayout.Button(REMOVE_SELECTION, UnityEditor.EditorStyles.miniButton))
             {
                 ClearSelection();
             }
@@ -597,7 +597,7 @@ namespace Watermelon
 
         public void DrawGlobalValidationButton()
         {
-            if (GUILayout.Button(GLOBAL_VALIDATION_LABEL, EditorStyles.miniButton))
+            if (GUILayout.Button(GLOBAL_VALIDATION_LABEL, UnityEditor.EditorStyles.miniButton))
             {
                 GlobalValidation();
             }
@@ -605,7 +605,7 @@ namespace Watermelon
 
         public void DrawToolbar()
         {
-            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+            EditorGUILayout.BeginHorizontal(UnityEditor.EditorStyles.toolbar);
 
             DrawRenameLevelsButton();
             DrawGlobalValidationButton();
@@ -706,7 +706,7 @@ namespace Watermelon
                 EditorGUILayout.Space(5);
 
                 // Current level info
-                EditorGUILayout.LabelField(string.Format(LABEL_FORMAT, originalIndex + 1), EditorStyles.boldLabel);
+                EditorGUILayout.LabelField(string.Format(LABEL_FORMAT, originalIndex + 1), UnityEditor.EditorStyles.boldLabel);
 
                 EditorGUILayout.Space(5);
 

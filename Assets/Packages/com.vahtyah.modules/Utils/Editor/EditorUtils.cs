@@ -7,7 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Watermelon
+namespace VahTyah
 {
     public static class EditorUtils
     {

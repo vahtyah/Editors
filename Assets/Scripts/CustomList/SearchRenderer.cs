@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using CustomLayerDrawing;
+using VahTyah;
 
-namespace Watermelon.List
+namespace VahTyah.List
 {
     /// <summary>
     /// Render search field
@@ -35,7 +35,7 @@ namespace Watermelon.List
 
             EditorGUI.BeginChangeCheck();
             GUI.SetNextControlName("SearchField");
-            string newSearch = EditorGUI.TextField(adjustedSearchFieldRect, searchHandler.SearchQuery, EditorStyles.toolbarSearchField);
+            string newSearch = EditorGUI.TextField(adjustedSearchFieldRect, searchHandler.SearchQuery, UnityEditor.EditorStyles.toolbarSearchField);
 
             if (EditorGUI. EndChangeCheck())
             {

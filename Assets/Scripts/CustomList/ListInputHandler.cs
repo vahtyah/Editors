@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 
-namespace Watermelon.List
+namespace VahTyah.List
 {
     /// <summary>
     /// Xử lý mouse input (clicks, double-click, context menu)
