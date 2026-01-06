@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -21,12 +21,14 @@ namespace VahTyah
 
     public class CustomInspector : Editor
     {
+        private List<Type> nestedClassTypes;
+        
         private List<PropertyGroup> propertyGroups;
         private List<SerializedProperty> ungroupedProperties;
         private SerializedProperty scriptProperty;
 
-        // Nested types cache (includes base classes)
-        private List<Type> nestedClassTypes;
+        private List<(MethodInfo method, ButtonAttribute attribute)> buttonMethods;
+        private ButtonDrawer buttonDrawer;
 
         protected virtual void OnEnable()
         {
@@ -34,11 +36,13 @@ namespace VahTyah
 
             scriptProperty = serializedObject.FindProperty("m_Script");
 
-            // Cache nested types (current class + all base classes)
             nestedClassTypes = GetClassNestedTypes(target.GetType());
 
             CollectProperties();
+            CollectButtonMethods();
             EditorStyles.EnsureStyleDatabaseExists();
+            
+            buttonDrawer = new ButtonDrawer();
         }
 
         private void CollectProperties()
@@ -48,35 +52,29 @@ namespace VahTyah
 
             Dictionary<string, PropertyGroup> groupsDict = new Dictionary<string, PropertyGroup>();
 
-            // Iterate through serialized properties
             SerializedProperty iterator = serializedObject.GetIterator();
 
             if (iterator.NextVisible(true))
             {
                 do
                 {
-                    // Skip script property
                     if (iterator.name.Equals("m_Script", StringComparison.OrdinalIgnoreCase))
                         continue;
 
-                    // Find the field info from nested types (includes base classes)
                     FieldInfo fieldInfo = GetFieldFromNestedTypes(iterator.name);
                     if (fieldInfo == null)
                     {
-                        // Field not found, draw as ungrouped
                         SerializedProperty property = serializedObject.FindProperty(iterator.propertyPath);
                         ungroupedProperties.Add(property);
                         continue;
                     }
 
-                    // Check for GroupAttribute
                     GroupAttribute groupAttr = fieldInfo.GetCustomAttribute<GroupAttribute>();
 
                     SerializedProperty targetProperty = serializedObject.FindProperty(iterator.propertyPath);
 
                     if (groupAttr != null)
                     {
-                        // Add to group
                         if (!groupsDict.TryGetValue(groupAttr.ID, out PropertyGroup group))
                         {
                             IGroupDrawer drawer = GroupDrawerRegistry.GetDrawer(groupAttr);
@@ -89,19 +87,16 @@ namespace VahTyah
                     }
                     else
                     {
-                        // No group - draw normally
                         ungroupedProperties.Add(targetProperty);
                     }
                 } while (iterator.NextVisible(false));
             }
 
-            // Sort groups by order
             propertyGroups = propertyGroups.OrderBy(g => g.Attribute.Order).ToList();
         }
 
         public override void OnInspectorGUI()
         {
-            // Draw script field
             if (scriptProperty != null)
             {
                 using (new EditorGUI.DisabledScope(true))
@@ -112,27 +107,77 @@ namespace VahTyah
 
             serializedObject.Update();
 
-            // Draw ungrouped properties first
             foreach (var property in ungroupedProperties)
             {
                 EditorGUILayout.PropertyField(property, true);
             }
 
-            // Draw grouped properties
             foreach (var group in propertyGroups)
             {
                 group.Draw();
             }
 
+            DrawButtons();
+
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private void CollectButtonMethods()
+        {
+            buttonMethods = new List<(MethodInfo, ButtonAttribute)>();
+
+            const BindingFlags flags = BindingFlags.Instance |
+                                       BindingFlags.Public |
+                                       BindingFlags.NonPublic;
+
+            foreach (Type type in nestedClassTypes)
+            {
+                MethodInfo[] methods = type.GetMethods(flags);
+                foreach (MethodInfo method in methods)
+                {
+                    ButtonAttribute buttonAttr = method.GetCustomAttribute<ButtonAttribute>();
+                    if (buttonAttr != null)
+                    {
+                        // Validate that the method has no parameters
+                        if (method.GetParameters().Length == 0)
+                        {
+                            buttonMethods.Add((method, buttonAttr));
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"Method '{method.Name}' has ButtonAttribute but requires parameters. Only parameterless methods are supported.");
+                        }
+                    }
+                }
+            }
+
+            buttonMethods = buttonMethods.OrderBy(b => b.Item2.Order).ToList();
+        }
+
+        private void DrawButtons()
+        {
+            if (buttonMethods == null || buttonMethods.Count == 0) return;
+            if (buttonDrawer == null) buttonDrawer = new ButtonDrawer();
+
+            EditorGUILayout.Space(5);
+
+            for (var i = 0; i < buttonMethods.Count; i++)
+            {
+                var buttonTuple = buttonMethods[i];
+                var method = buttonTuple.Item1;
+                var attribute = buttonTuple.Item2;
+
+                buttonDrawer.DrawButton(method, attribute, targets);
+                
+                if (i < buttonMethods.Count - 1)
+                {
+                    buttonDrawer.DrawSpacing();
+                }
+            }
         }
 
         #region Reflection Helpers
 
-        /// <summary>
-        /// Get all types in inheritance hierarchy (current class + all base classes)
-        /// This is what code gốc calls "nested types"
-        /// </summary>
         private List<Type> GetClassNestedTypes(Type type)
         {
             List<Type> typesList = new List<Type> { type };
@@ -147,9 +192,6 @@ namespace VahTyah
             return typesList;
         }
 
-        /// <summary>
-        /// Find field from current class or any base class
-        /// </summary>
         private FieldInfo GetFieldFromNestedTypes(string fieldName)
         {
             const BindingFlags flags = BindingFlags.Instance |

@@ -33,5 +33,11 @@ namespace VahTyah
         // Ungrouped properties
         public string ungroupedField = "I'm free!";
         public int anotherField = 42;
+        
+        [Button()]
+        private void ButtonInPlayerGroup()
+        {
+            Debug.Log("Button in Player Group clicked!");
+        }
     }
 }
