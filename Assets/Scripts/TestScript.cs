@@ -1,8 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections.Generic;
 
 namespace VahTyah
 {
+    public enum TestEnum
+    {
+        OptionA,
+        OptionB,
+        OptionC
+    }
+    [Serializable]
+    public class Dog
+    {
+        public string name;
+    }
     public class TestScript : MonoBehaviour
     {
         [BoxGroup("Player", "⚔️ Player Settings", 0)]
@@ -35,9 +47,15 @@ namespace VahTyah
         public int anotherField = 42;
         
         [Button()]
-        private void ButtonInPlayerGroup()
+        private void ButtonInPlayerGroup(List<int> a, GameObject key, TestEnum option, Dog dog)
         {
             Debug.Log("Button in Player Group clicked!");
+        }
+        
+        [Button]
+        private void ButtonOutsideGroup()
+        {
+            Debug.Log("Button outside group clicked!");
         }
     }
 }
