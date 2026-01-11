@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   styles:
   - name: Style 1
-    enableHeader: 0
-    enableSearch: 0
+    enableHeader: 1
+    enableSearch: 1
     enableFooterAddButton: 1
     enableFooterRemoveButton: 1
     enableElementRemoveButton: 0

@@ -3,11 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using VahTyah;
 using VahTyah.List;
-using EditorStyles = UnityEditor.EditorStyles;
 
-namespace Tyah.List
+namespace VahTyah
 {
     public class SimpleCustomList
     {
@@ -80,15 +78,12 @@ namespace Tyah.List
         private bool dragging = false;
         private int startDragIndex = -1;
         private int currentDragIndex = -1;
-        private int dragIndexAdjustment = 0;
         private float dragOffset = 0;
         private float draggedElementY = 0;
-        private float previousDraggedElementY = 0;
         private float draggedElementHeight = 20;
         private Vector2 lastMouseDownPosition;
         private int lastMouseDownIndex = -1;
         private float lastMouseDownHeight = 20;
-        private float mouseYinList = 0;
         private bool isSelected = false;
 
         //Double-click detection
@@ -208,7 +203,7 @@ namespace Tyah.List
 
         public EditorWindow ParentWindow
         {
-            get => parentWindow;
+            get => parentWindow ?? LevelEditorBase.Window;
             set => parentWindow = value;
         }
 
@@ -219,9 +214,9 @@ namespace Tyah.List
 
         public void RequestRepaint()
         {
-            if (parentWindow != null)
+            if (ParentWindow != null)
             {
-                parentWindow.Repaint();
+                ParentWindow.Repaint();
             }
         }
 
@@ -243,9 +238,9 @@ namespace Tyah.List
         {
             this.serializedObject = serializedObject;
             this.labelPropertyName = labelPropertyName;
-            this.useLabelProperty = true;
-            this.elementsProperty = elements;
-            this.usingPropertyList = false;
+            useLabelProperty = true;
+            elementsProperty = elements;
+            usingPropertyList = false;
             LoadCustomStyle();
         }
 
@@ -254,9 +249,9 @@ namespace Tyah.List
         {
             this.serializedObject = serializedObject;
             this.getLabelCallback = getLabelCallback;
-            this.useLabelProperty = false;
-            this.elementsProperty = elements;
-            this.usingPropertyList = false;
+            useLabelProperty = false;
+            elementsProperty = elements;
+            usingPropertyList = false;
             LoadCustomStyle();
         }
 
@@ -265,9 +260,9 @@ namespace Tyah.List
         {
             this.serializedObject = serializedObject;
             this.labelPropertyName = labelPropertyName;
-            this.useLabelProperty = true;
-            this.elementsList = propertyList;
-            this.usingPropertyList = true;
+            useLabelProperty = true;
+            elementsList = propertyList;
+            usingPropertyList = true;
             LoadCustomStyle();
         }
 
@@ -276,18 +271,18 @@ namespace Tyah.List
         {
             this.serializedObject = serializedObject;
             this.getLabelCallback = getLabelCallback;
-            this.useLabelProperty = false;
-            this.elementsList = propertyList;
-            this.usingPropertyList = true;
+            useLabelProperty = false;
+            elementsList = propertyList;
+            usingPropertyList = true;
             LoadCustomStyle();
         }
 
         public SimpleCustomList(IList elements, GetLabelDelegate getLabelCallback)
         {
             this.getLabelCallback = getLabelCallback;
-            this.useLabelProperty = false;
+            useLabelProperty = false;
             this.elements = elements;
-            this.usingListInterface = true;
+            usingListInterface = true;
             LoadCustomStyle();
         }
 
@@ -841,7 +836,6 @@ namespace Tyah.List
             GUIStyle headerStyle = new GUIStyle(GUI.skin.label);
             headerStyle.alignment = TextAnchor.MiddleLeft;
 
-            // ✅ THÊM:  Apply text color từ style
             if (currentCustomStyle != null && currentCustomStyle.header != null)
             {
                 headerStyle.normal.textColor = currentCustomStyle.header.textColor;
@@ -852,7 +846,6 @@ namespace Tyah.List
             GUIStyle sizeStyle = new GUIStyle(GUI.skin.label);
             sizeStyle.alignment = TextAnchor.MiddleRight;
 
-            // ✅ THÊM: Apply text color từ style
             if (currentCustomStyle != null && currentCustomStyle.header != null)
             {
                 sizeStyle.normal.textColor = currentCustomStyle.header.textColor;
@@ -900,30 +893,24 @@ namespace Tyah.List
 
             if (dragging)
             {
-                // VẼ TẤT CẢ ELEMENTS THEO THỨ TỰ GỐC
-                // Chỉ tạo gap ở currentDragIndex, không shift index
                 for (int i = pageBeginIndex; i < endIndex; i++)
                 {
-                    // Skip element ở startDragIndex (vì nó đang được drag)
                     int actualIndex = isSearchActive ? filteredIndices[i] : i;
                     if (actualIndex == startDragIndex)
                     {
-                        // Nếu đang drag qua chính vị trí gốc, vẫn tạo gap
                         if (currentDragIndex == startDragIndex)
                         {
                             currentY += collapsedElementHeight;
                         }
 
-                        continue; // Bỏ qua, không vẽ
+                        continue;
                     }
 
-                    // Tạo gap ở currentDragIndex (nếu khác startDragIndex)
                     if (actualIndex == currentDragIndex && currentDragIndex != startDragIndex)
                     {
-                        currentY += collapsedElementHeight; // Tạo khoảng trống
+                        currentY += collapsedElementHeight;
                     }
 
-                    // Vẽ element bình thường
                     isSelected = false;
                     elementRect.Set(
                         listContentRect.x,
@@ -935,7 +922,6 @@ namespace Tyah.List
                     currentY += collapsedElementHeight;
                 }
 
-                // VẼ ELEMENT ĐANG DRAG ĐÈ LÊN TRÊN (cuối cùng)
                 isSelected = true;
                 elementRect.Set(
                     listContentRect.x,
@@ -947,7 +933,6 @@ namespace Tyah.List
             }
             else
             {
-                // Vẽ bình thường khi không drag
                 for (int i = pageBeginIndex; i < endIndex; i++)
                 {
                     int actualIndex = isSearchActive ? filteredIndices[i] : i;
@@ -1034,7 +1019,6 @@ namespace Tyah.List
         {
             SerializedProperty currentElementProperty = GetElement(index);
 
-            // Draw element background
             Rect elementBgRect = new Rect(rect.x, rect.y, rect.width, collapsedElementHeight);
 
             if (isSelected)
@@ -1042,7 +1026,6 @@ namespace Tyah.List
             else
                 LayerDrawingSystem.DrawLayers(elementBgRect, unselectedElementConfig);
 
-            // Draw drag handle
             if (currentEvent.type == EventType.Repaint)
             {
                 Rect dragRect = GetDragHandleRect(rect);
@@ -1050,7 +1033,6 @@ namespace Tyah.List
                 dragStyle.Draw(dragRect, false, false, false, false);
             }
 
-            // Draw label
             Rect currentLabelRect = new Rect(
                 rect.x + DRAG_HANDLE_ALLOCATED_SPACE,
                 rect.y,
@@ -1072,29 +1054,34 @@ namespace Tyah.List
 
             GUI.Label(currentLabelRect, label);
 
-            if (!dragging && currentEvent.type == EventType.MouseDown &&
+            if (! dragging && currentEvent.type == EventType.MouseDown &&
                 rect.Contains(currentEvent.mousePosition) &&
-                currentEvent.button == 1) // Right click
+                currentEvent. button == 1)
             {
                 if (selectedIndex != index)
                 {
                     OnSelectionChanged(index);
-                    RequestRepaint(); // Force repaint để highlight ngay
                 }
-
+        
+                currentEvent.Use();
+                RequestRepaint();
+                return;
+            }
+            
+            if (!dragging && currentEvent.type == EventType.ContextClick &&
+                rect.Contains(currentEvent. mousePosition))
+            {
                 if (displayContextMenuCallback != null)
                 {
-                    displayContextMenuCallback.Invoke(index);
-                    currentEvent.Use();
-                    return;
+                    displayContextMenuCallback. Invoke(index);
                 }
                 else
                 {
-                    // Default context menu
                     ShowDefaultContextMenu(index);
-                    currentEvent.Use();
-                    return;
                 }
+        
+                currentEvent.Use();
+                return;
             }
 
             Rect headerButtonRect = new Rect(
@@ -1116,7 +1103,6 @@ namespace Tyah.List
                 headerButtonRect.Contains(currentEvent.mousePosition) &&
                 currentEvent.button == 0)
             {
-                // ✅ DOUBLE-CLICK DETECTION
                 double currentTime = EditorApplication.timeSinceStartup;
                 bool isDoubleClick = false;
 
@@ -1124,7 +1110,6 @@ namespace Tyah.List
                 {
                     isDoubleClick = true;
 
-                    // Reset để tránh triple-click
                     lastClickTime = 0;
                     lastClickedIndex = -1;
                 }
@@ -1136,7 +1121,6 @@ namespace Tyah.List
 
                 if (isDoubleClick)
                 {
-                    // Double-click action
                     if (elementDoubleClickedCallback != null)
                     {
                         elementDoubleClickedCallback.Invoke(index);
@@ -1146,24 +1130,19 @@ namespace Tyah.List
                 }
                 else
                 {
-                    // Single-click:  normal selection
                     OnSelectionChanged(index);
                 }
 
                 currentEvent.Use();
             }
 
-            // Track mouse down for drag detection - CHỈ KHI CLICK VÀO DRAG ICON
             if (!dragging && currentEvent.type == EventType.MouseDown && currentEvent.button == 0)
             {
-                // Tính vị trí của drag handle icon
                 Rect dragHandleRect = GetDragHandleRect(rect);
 
-                // Mở rộng vùng click cho dễ click hơn (thêm 3px trên dưới)
                 dragHandleRect.yMin -= 3;
                 dragHandleRect.yMax += 3;
 
-                // Chỉ cho phép drag khi click vào drag handle
                 if (dragHandleRect.Contains(currentEvent.mousePosition))
                 {
                     lastMouseDownPosition = currentEvent.mousePosition;
@@ -1205,25 +1184,20 @@ namespace Tyah.List
 
             GUIStyle buttonStyle = new GUIStyle("RL FooterButton");
 
-            // Add button
             if (enableFooterAddButton)
             {
-                // ✅ THAY ĐỔI ICON
                 GUIContent addIcon = addElementWithDropdownCallback != null
-                    ? EditorGUIUtility.TrIconContent("Toolbar Plus More") // Icon có dropdown
-                    : EditorGUIUtility.TrIconContent("Toolbar Plus"); // Icon bình thường
+                    ? EditorGUIUtility.TrIconContent("Toolbar Plus More")
+                    : EditorGUIUtility.TrIconContent("Toolbar Plus");
 
                 if (GUI.Button(footerButtonRect, addIcon, buttonStyle))
                 {
-                    // ✅ KIỂM TRA CALLBACK
                     if (addElementWithDropdownCallback != null)
                     {
-                        // Hiển thị dropdown menu
                         addElementWithDropdownCallback.Invoke(footerButtonRect);
                     }
                     else
                     {
-                        // Tạo element bình thường
                         AddElement();
                     }
                 }
@@ -1231,7 +1205,6 @@ namespace Tyah.List
                 footerButtonRect.x += 25;
             }
 
-            // Remove button
             if (enableFooterRemoveButton)
             {
                 using (new EditorGUI.DisabledScope(selectedIndex < 0 || selectedIndex >= ArraySize()))
@@ -1250,14 +1223,11 @@ namespace Tyah.List
 
         private void DrawSearch()
         {
-            // Draw background
             LayerDrawingSystem.DrawLayers(searchRect, headerBackgroundConfig);
 
-            // ✅ FIX: Draw search field với padding bên phải nếu có text
             Rect adjustedSearchFieldRect = searchFieldRect;
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                // Chừa chỗ cho clear button bên trong
                 adjustedSearchFieldRect.width -= 20;
             }
 
@@ -1265,7 +1235,7 @@ namespace Tyah.List
 
             GUI.SetNextControlName("SearchField");
             string newSearch =
-                EditorGUI.TextField(adjustedSearchFieldRect, searchQuery, EditorStyles.toolbarSearchField);
+                EditorGUI.TextField(adjustedSearchFieldRect, searchQuery, UnityEditor.EditorStyles.toolbarSearchField);
 
             if (EditorGUI.EndChangeCheck())
             {
@@ -1275,10 +1245,8 @@ namespace Tyah.List
                 RequestRepaint();
             }
 
-            // ✅ FIX:  Draw clear button BÊN TRONG search field
             if (!string.IsNullOrEmpty(searchQuery))
             {
-                // Style cho clear button
                 GUIStyle clearButtonStyle = new GUIStyle(GUI.skin.label);
                 clearButtonStyle.alignment = TextAnchor.MiddleCenter;
                 clearButtonStyle.fontSize = 14;
@@ -1323,14 +1291,12 @@ namespace Tyah.List
             if (string.IsNullOrEmpty(searchQuery))
                 return true;
 
-            // Use custom filter callback if provided
             if (searchFilterCallback != null)
             {
                 SerializedProperty prop = GetElement(index);
                 return searchFilterCallback(prop, index, searchQuery);
             }
 
-            // Default:  search in element label (case-insensitive)
             SerializedProperty element = GetElement(index);
             string label = GetElementLabel(element, index);
 
@@ -1345,12 +1311,10 @@ namespace Tyah.List
         {
             GenericMenu menu = new GenericMenu();
 
-            // Duplicate
             menu.AddItem(new GUIContent("Duplicate"), false, () => { DuplicateElement(index); });
 
             menu.AddSeparator("");
 
-            // Move to top
             if (index > 0)
             {
                 menu.AddItem(new GUIContent("Move to Top"), false, () =>
@@ -1368,7 +1332,6 @@ namespace Tyah.List
                 menu.AddDisabledItem(new GUIContent("Move to Top"));
             }
 
-            // Move to bottom
             if (index < ArraySize() - 1)
             {
                 menu.AddItem(new GUIContent("Move to Bottom"), false, () =>
@@ -1388,7 +1351,6 @@ namespace Tyah.List
 
             menu.AddSeparator("");
 
-            // Delete
             menu.AddItem(new GUIContent("Delete"), false, () =>
             {
                 selectedIndex = index;
@@ -1482,8 +1444,6 @@ namespace Tyah.List
                 filledElementsRect.yMax - draggedElementHeight
             );
 
-            dragIndexAdjustment = 0;
-
             Debug.Log($"Drag Started:  startIndex={startDragIndex}, currentIndex={currentDragIndex}");
 
             currentEvent.Use();
@@ -1510,36 +1470,17 @@ namespace Tyah.List
                 ? Mathf.Min(pageBeginIndex + pageElementCount, ArraySize())
                 : ArraySize();
 
-            // FIXED: Cho phép currentDragIndex = endIndex (để tạo gap sau element cuối)
-            // Nhưng giới hạn trong page hiện tại
             if (enablePagination)
             {
                 int minIndex = Mathf.Max(0, pageBeginIndex);
-                int maxIndex = Mathf.Min(ArraySize(), endIndex); // Cho phép = endIndex
+                int maxIndex = Mathf.Min(ArraySize(), endIndex);
 
                 currentDragIndex = Mathf.Clamp(currentDragIndex, minIndex, maxIndex);
             }
             else
             {
-                // Không có pagination: cho phép toàn bộ array
                 currentDragIndex = Mathf.Clamp(currentDragIndex, 0, ArraySize());
             }
-
-            // Tính adjustment direction
-            if (currentDragIndex == startDragIndex)
-            {
-                dragIndexAdjustment = 0;
-            }
-            else if (currentDragIndex < startDragIndex)
-            {
-                dragIndexAdjustment = 1;
-            }
-            else
-            {
-                dragIndexAdjustment = -1;
-            }
-
-            previousDraggedElementY = draggedElementY;
 
             if (currentEvent.type == EventType.MouseDrag)
             {

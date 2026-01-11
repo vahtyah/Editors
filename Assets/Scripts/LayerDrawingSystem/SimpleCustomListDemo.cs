@@ -1,13 +1,14 @@
 ﻿using System;
 using UnityEngine;
 using UnityEditor;
-using VahTyah.List;
+using VahTyah;
+using EditorStyles = UnityEditor.EditorStyles;
 using Random = UnityEngine.Random;
-using SimpleCustomList = Tyah.List.SimpleCustomList;
+using SimpleCustomList = VahTyah.List.SimpleCustomList;
 
 public class SimpleCustomListDemo :  EditorWindow
 {
-    [System.Serializable]
+    [Serializable]
     public class TestItem
     {
         public string name = "New Item";
@@ -108,7 +109,7 @@ public class SimpleCustomListDemo :  EditorWindow
         // Add callback (fallback)
         customList.addElementCallback = () =>
         {
-            System.Array.Resize(ref items, items.Length + 1);
+            Array.Resize(ref items, items.Length + 1);
             items[items.Length - 1] = new TestItem { name = $"Item {items.Length - 1}" };
             serializedObject.Update();
         };
@@ -276,7 +277,7 @@ public class SimpleCustomListDemo :  EditorWindow
 
     private void AddItem(ItemType type)
     {
-        System.Array.Resize(ref items, items.Length + 1);
+        Array.Resize(ref items, items.Length + 1);
         
         string typeName = type.ToString();
         items[items.Length - 1] = new TestItem 
@@ -324,7 +325,7 @@ public class SimpleCustomListDemo :  EditorWindow
         int index = customList.SelectedIndex;
         if (index >= 0 && index < items.Length)
         {
-            System.Array.Resize(ref items, items.Length + 1);
+            Array.Resize(ref items, items.Length + 1);
             
             TestItem original = items[index];
             items[items.Length - 1] = new TestItem

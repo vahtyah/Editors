@@ -1,9 +1,7 @@
 ﻿using System;
-using UnityEditor;
 using UnityEngine;
-using VahTyah;
 
-namespace VahTyah.List
+namespace VahTyah
 {
     [Serializable]
     public class CustomListStyle
@@ -38,10 +36,6 @@ namespace VahTyah.List
         [Header("Messages")]
         public string emptyListMessage = "List is empty";
         public string noResultsMessage = "No results found";
-
-        public CustomListStyle()
-        {
-        }
 
         public void SetDefaultStyleValues()
         {

@@ -3,13 +3,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using System.IO;
-using System.Text;
 using System;
+using System.IO;
+using Object = UnityEngine.Object;
 
 namespace VahTyah
 {
-    public class LevelsHandler
+    public abstract class LevelsHandlerBase
     {
         #region Constants
 
@@ -31,12 +31,15 @@ namespace VahTyah
         private const string REMOVE_ELEMENT_CALLBACK = "Delete Level";
 
         private const string ON_ENABLE_OVERRIDEN_ERROR =
-            "LevelEditorBase.Instance == null. OnEnable() overriden without base. OnEnable() call";
+            "LevelsHandlerBase: OnEnable overridden but levels database not assigned!";
 
         private const string SET_POSITION_LABEL = "Set Position... ";
         private const string DUPLICATE_LEVEL_LABEL = "Duplicate Level";
         private const string INDEX_CHANGE_WINDOW = "Change Level Position";
         private readonly Vector2 INDEX_CHANGE_WINDOW_SIZE = new Vector2(320, 80);
+
+        //PlayerPrefs
+        private const string PREFS_LEVEL = "editor_level_index";
 
         #endregion
 
@@ -55,6 +58,7 @@ namespace VahTyah
         public delegate void OnLevelOpenedCallbackDelegate(int levelIndex);
 
         public delegate void OnLevelChangedCallbackDelegate();
+
         public delegate void AddElementWithDropdownCallbackDelegate(Rect buttonRect);
 
         public AddElementCallbackDelegate addElementCallback;
@@ -70,7 +74,8 @@ namespace VahTyah
 
         #region Fields
 
-        private List<string> levelLabels;
+        private List<string> levelLabels = new();
+        private Object levelsDatabase;
         private SerializedObject levelsDatabaseSerializedObject;
         private SerializedProperty levelsSerializedProperty;
         private SimpleCustomList customList;
@@ -94,7 +99,7 @@ namespace VahTyah
             }
         }
 
-        public UnityEngine.Object SelectedLevel
+        public Object SelectedLevel
         {
             get => SelectedLevelProperty?.objectReferenceValue;
             set
@@ -120,18 +125,14 @@ namespace VahTyah
 
         #region Constructor
 
-        public LevelsHandler(SerializedObject levelsDatabaseSerializedObject,
-            SerializedProperty levelsSerializedProperty)
+        public LevelsHandlerBase()
         {
-            this.levelsDatabaseSerializedObject = levelsDatabaseSerializedObject;
-            this.levelsSerializedProperty = levelsSerializedProperty;
-            levelLabels = new List<string>();
-
             Initialize();
         }
 
         private void Initialize()
         {
+            SetupLevel();
             SetLevelLabels();
             SetupCustomList();
         }
@@ -139,6 +140,24 @@ namespace VahTyah
         #endregion
 
         #region Custom List Setup
+
+        private void SetupLevel()
+        {
+            levelsDatabase = EditorUtils.GetAsset(GetLevelDatabaseType);
+            if (levelsDatabase != null)
+            {
+                levelsDatabaseSerializedObject = new SerializedObject(levelsDatabase);
+                levelsSerializedProperty = levelsDatabaseSerializedObject.FindProperty(GetPropertyName);
+            }
+            else
+            {
+                Debug.LogError(ON_ENABLE_OVERRIDEN_ERROR);
+            }
+        }
+
+        public abstract string GetPropertyName { get; }
+        public abstract Type GetLevelDatabaseType { get; }
+        public abstract Type GetLevelType { get; }
 
         private void SetupCustomList()
         {
@@ -172,9 +191,9 @@ namespace VahTyah
 
             // Context menu
             customList.displayContextMenuCallback = OnDisplayContextMenu;
-            
+
             // Add with dropdown
-            customList.addElementWithDropdownCallback = OnAddElementWithDropdown;
+            // customList.addElementWithDropdownCallback = OnAddElementWithDropdown;
 
             // Double-click
             customList.elementDoubleClickedCallback = OnElementDoubleClicked;
@@ -190,14 +209,14 @@ namespace VahTyah
 
         #region Callbacks
 
-        private string GetLevelLabel(SerializedProperty elementProperty, int elementIndex)
+        protected virtual string GetLevelLabel(SerializedProperty elementProperty, int elementIndex)
         {
             if (elementIndex >= 0 && elementIndex < levelLabels.Count)
             {
                 return levelLabels[elementIndex];
             }
 
-            return $"Level {elementIndex + 1}";
+            return $"Level {FormatLevelNumber(elementIndex + 1)}";
         }
 
         private string GetHeaderLabel()
@@ -227,7 +246,7 @@ namespace VahTyah
 
         private void OnListReorderedWithDetails(int fromIndex, int toIndex)
         {
-            Debug.Log($"Level moved from position {fromIndex + 1} to {toIndex + 1}");
+            Debug.Log($"Level moved from position {FormatLevelNumber(fromIndex + 1)} to {FormatLevelNumber(toIndex + 1)}");
         }
 
         private void OnAddElement()
@@ -248,41 +267,34 @@ namespace VahTyah
         private void OnDisplayContextMenu(int index)
         {
             GenericMenu menu = new GenericMenu();
-
-            // Set Position
-            menu.AddItem(new GUIContent(SET_POSITION_LABEL), false, () => OpenSetIndexModalWindow(index));
-
-            menu.AddSeparator("");
-
-            // Duplicate Level
-            menu.AddItem(new GUIContent(DUPLICATE_LEVEL_LABEL), false, () => DuplicateLevel(index));
-
-            menu.AddSeparator("");
-
-            // Clear Selection
-            menu.AddItem(new GUIContent(REMOVE_SELECTION), false, ClearSelection);
-
-            // Delete Level
-            menu.AddItem(new GUIContent(REMOVE_ELEMENT_CALLBACK), false, () => DeleteLevel(index));
-
-            // Custom menu items from external callback
+            SetContextMenu(index, menu);
             displayContextMenuCallback?.Invoke(menu);
 
             menu.ShowAsContext();
         }
-        
+
+        protected virtual void SetContextMenu(int index, GenericMenu menu)
+        {
+            menu.AddItem(new GUIContent(SET_POSITION_LABEL), false, () => OpenSetIndexModalWindow(index));
+
+            menu.AddSeparator("");
+
+            menu.AddItem(new GUIContent(DUPLICATE_LEVEL_LABEL), false, () => DuplicateLevel(index));
+            menu.AddItem(new GUIContent(REMOVE_ELEMENT_CALLBACK), false, () => DeleteLevel(index));
+        }
+
         private void OnAddElementWithDropdown(Rect buttonRect)
         {
             addElementWithDropdownCallback?.Invoke(buttonRect);
         }
 
-        private void OnElementDoubleClicked(int index)
+        protected virtual void OnElementDoubleClicked(int index)
         {
             // Double-click opens level (already handled by selection change)
             // Debug.Log($"Double-clicked level {index + 1}:  {levelLabels[index]}");
         }
 
-        private bool OnSearchFilter(SerializedProperty prop, int index, string query)
+        protected virtual bool OnSearchFilter(SerializedProperty prop, int index, string query)
         {
             if (index >= 0 && index < levelLabels.Count)
             {
@@ -309,10 +321,11 @@ namespace VahTyah
 
         public virtual void OpenLevel(int index)
         {
-
             if (index >= 0 && index < levelsSerializedProperty.arraySize)
             {
-                // var levelObject = levelsSerializedProperty.GetArrayElementAtIndex(index).objectReferenceValue;
+                PlayerPrefs.SetInt(PREFS_LEVEL, index);
+                PlayerPrefs.Save();
+                var levelObject = levelsSerializedProperty.GetArrayElementAtIndex(index).objectReferenceValue;
                 // LevelEditorBase.Instance.OpenLevel(levelObject, index);
                 onLevelOpenedCallback?.Invoke(index);
             }
@@ -328,84 +341,71 @@ namespace VahTyah
 
         public void AddLevel()
         {
-            // // Increase array size
-            // levelsSerializedProperty.arraySize++;
-            // int newLevelIndex = levelsSerializedProperty.arraySize - 1;
-            //
-            // // Create new level ScriptableObject
-            // UnityEngine.Object level = ScriptableObject.CreateInstance(LevelEditorBase.Instance.GetLevelType());
-            //
-            // // Generate unique level number
-            // string levelNumber = GetUniqueLevelNumber();
-            // string assetPath = GetRelativeLevelAssetPathByNumber(levelNumber);
-            //
-            // // Create asset
-            // AssetDatabase.CreateAsset(level, assetPath);
-            //
-            // // Clear/initialize level data
-            // LevelEditorBase. Instance.ClearLevel(level);
-            //
-            // // Update label
-            // string label = LevelEditorBase.Instance.GetLevelLabel(level, newLevelIndex);
-            // levelLabels.Add(label);
-            //
-            // // Assign to property
-            // levelsSerializedProperty.GetArrayElementAtIndex(newLevelIndex).objectReferenceValue = level;
-            //
-            // // Save
-            // levelsDatabaseSerializedObject.ApplyModifiedProperties();
-            // AssetDatabase.SaveAssets();
-            //
-            // // Select and open new level
-            // customList.SelectedIndex = newLevelIndex;
-            // OpenLevel(newLevelIndex);
+            int newLevelIndex = levelsSerializedProperty.arraySize;
+            levelsSerializedProperty.arraySize++;
 
-            // Debug.Log($"Created new level:  {label} at {assetPath}");
+            Object level = ScriptableObject.CreateInstance(GetLevelType);
+
+            string levelNumber = GetUniqueLevelNumber();
+            string assetPath = GetRelativeLevelAssetPathByNumber(levelNumber);
+
+            AssetDatabase.CreateAsset(level, assetPath);
+
+            string label = GetLevelLabel(level, newLevelIndex);
+            levelLabels.Add(label);
+
+            levelsSerializedProperty.GetArrayElementAtIndex(newLevelIndex).objectReferenceValue = level;
+            levelsDatabaseSerializedObject.ApplyModifiedProperties();
+
+            AssetDatabase.SaveAssets();
+
+            customList.SelectedIndex = newLevelIndex;
+
+            Debug.Log($"Created new level:  {label} at {assetPath}");
         }
 
         public void DuplicateLevel(int sourceIndex)
         {
-            // if (sourceIndex < 0 || sourceIndex >= levelsSerializedProperty.arraySize)
-            //     return;
-            //
-            // // Get source level
-            // var sourceLevel = levelsSerializedProperty.GetArrayElementAtIndex(sourceIndex).objectReferenceValue;
-            // if (sourceLevel == null)
-            //     return;
-            //
-            // // Increase array size
-            // levelsSerializedProperty.arraySize++;
-            // int newLevelIndex = levelsSerializedProperty.arraySize - 1;
-            //
-            // // Create new level ScriptableObject
-            // UnityEngine.Object newLevel = ScriptableObject.CreateInstance(LevelEditorBase. Instance.GetLevelType());
-            //
-            // // Generate unique level number
-            // string levelNumber = GetUniqueLevelNumber();
-            // string assetPath = GetRelativeLevelAssetPathByNumber(levelNumber);
-            //
-            // // Create asset
-            // AssetDatabase.CreateAsset(newLevel, assetPath);
-            //
-            // // Copy data from source level
-            // EditorUtility.CopySerialized(sourceLevel, newLevel);
-            //
-            // // Update label
-            // string label = LevelEditorBase.Instance.GetLevelLabel(newLevel, newLevelIndex);
-            // levelLabels.Add(label);
-            //
-            // // Assign to property
-            // levelsSerializedProperty.GetArrayElementAtIndex(newLevelIndex).objectReferenceValue = newLevel;
-            //
-            // // Save
-            // levelsDatabaseSerializedObject.ApplyModifiedProperties();
-            // AssetDatabase.SaveAssets();
-            //
-            // // Select and open new level
-            // customList.SelectedIndex = newLevelIndex;
+            if (sourceIndex < 0 || sourceIndex >= levelsSerializedProperty.arraySize)
+                return;
+
+            var sourceLevel = levelsSerializedProperty.GetArrayElementAtIndex(sourceIndex).objectReferenceValue;
+            if (sourceLevel == null)
+                return;
+
+            Object newLevel = ScriptableObject.CreateInstance(GetLevelType);
+
+            EditorUtility.CopySerialized(sourceLevel, newLevel);
+
+            string levelNumber = GetUniqueLevelNumber();
+            string assetPath = GetRelativeLevelAssetPathByNumber(levelNumber);
+
+            string directory = Path.GetDirectoryName(assetPath);
+            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(assetPath);
+            string extension = Path.GetExtension(assetPath);
+            string newAssetPath = Path.Combine(directory, fileNameWithoutExtension + " (Copy)" + extension);
+
+            AssetDatabase.CreateAsset(newLevel, newAssetPath);
+
+            EditorUtility.SetDirty(newLevel);
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+
+            levelsSerializedProperty.arraySize++;
+            int newLevelIndex = levelsSerializedProperty.arraySize - 1;
+
+            levelsSerializedProperty.GetArrayElementAtIndex(newLevelIndex).objectReferenceValue = newLevel;
+
+            string label = GetLevelLabel(newLevel, newLevelIndex);
+            levelLabels.Add(label);
+
+            levelsDatabaseSerializedObject.ApplyModifiedProperties();
+            AssetDatabase.SaveAssets();
+
+            customList.SelectedIndex = newLevelIndex;
             // OpenLevel(newLevelIndex);
-            //
-            // Debug.Log($"Duplicated level {sourceIndex + 1} to {newLevelIndex + 1}:  {label}");
+
+            Debug.Log($"Duplicated level {sourceIndex + 1} to {newLevelIndex + 1}:  {label} at {newAssetPath}");
         }
 
         public void DeleteLevel(int levelIndex)
@@ -414,7 +414,7 @@ namespace VahTyah
                 return;
 
             // Confirmation dialog
-            string levelLabel = levelIndex < levelLabels.Count ? levelLabels[levelIndex] : $"Level {levelIndex + 1}";
+            string levelLabel = levelIndex < levelLabels.Count ? levelLabels[levelIndex] : $"Level {FormatLevelNumber(levelIndex + 1)}";
             string message = $"{REMOVE_LEVEL}{BRACKET}{levelLabel}{BRACKET}{QUESTION_MARK}";
 
             if (!EditorUtility.DisplayDialog(REMOVING_LEVEL_TITLE, message, YES, CANCEL))
@@ -452,12 +452,6 @@ namespace VahTyah
             Debug.Log($"Deleted level {levelIndex + 1}: {levelLabel}");
         }
 
-        public void ClearSelection()
-        {
-            customList.SelectedIndex = -1;
-            onClearSelectionCallback?.Invoke();
-        }
-
         public void UpdateCurrentLevelLabel(string label)
         {
             if (SelectedLevelIndex >= 0 && SelectedLevelIndex < levelLabels.Count)
@@ -472,11 +466,22 @@ namespace VahTyah
 
         public virtual void SetLevelLabels()
         {
+            levelLabels.Clear();
+
+            for (int i = 0; i < levelsSerializedProperty.arraySize; i++)
+            {
+                levelLabels.Add(GetLevelLabel(levelsSerializedProperty.GetArrayElementAtIndex(i).objectReferenceValue,
+                    i));
+            }
+        }
+
+        public virtual string GetLevelLabel(Object levelObject, int index)
+        {
+            return $"{FormatLevelNumber(index + 1)} | {levelObject.name}";
         }
 
         public void RenameLevels()
         {
-            // Find levels with incorrect names
             List<int> incorrectIndices = new List<int>();
 
             for (int i = 0; i < levelsSerializedProperty.arraySize; i++)
@@ -538,9 +543,8 @@ namespace VahTyah
 
         #region Validation
 
-        public void GlobalValidation()
+        public virtual void GlobalValidation()
         {
-
             Debug.Log("=== Global Validation Started ===");
 
             int errorCount = 0;
@@ -551,12 +555,12 @@ namespace VahTyah
 
                 if (levelObject == null)
                 {
-                    Debug.LogError($"Level {i + 1}:  NULL reference!");
+                    Debug.LogError($"Level {FormatLevelNumber(i + 1)}:  NULL reference!");
                     errorCount++;
                     continue;
                 }
 
-                Debug.Log($"Validating Level {i + 1}: {levelLabels[i]}");
+                Debug.Log($"Validating Level {FormatLevelNumber(i + 1)}: {levelLabels[i]}");
                 // LevelEditorBase.Instance.LogErrorsForGlobalValidation(levelObject, i);
             }
 
@@ -586,14 +590,6 @@ namespace VahTyah
             }
         }
 
-        public void DrawClearSelectionButton()
-        {
-            if (GUILayout.Button(REMOVE_SELECTION, UnityEditor.EditorStyles.miniButton))
-            {
-                ClearSelection();
-            }
-        }
-
         public void DrawGlobalValidationButton()
         {
             if (GUILayout.Button(GLOBAL_VALIDATION_LABEL, UnityEditor.EditorStyles.miniButton))
@@ -604,19 +600,31 @@ namespace VahTyah
 
         public void DrawToolbar()
         {
-            EditorGUILayout.BeginHorizontal(UnityEditor.EditorStyles.toolbar);
+            EditorGUILayout.BeginVertical();
+            DrawButtonToolbar();
+            EditorGUILayout.EndVertical();
+        }
 
+        protected virtual void DrawButtonToolbar()
+        {
             DrawRenameLevelsButton();
             DrawGlobalValidationButton();
-            GUILayout.FlexibleSpace();
-            DrawClearSelectionButton();
-
-            EditorGUILayout.EndHorizontal();
         }
 
         #endregion
 
         #region Helpers
+
+        public abstract string LevelFolderPath { get; }
+
+        public void OpenLastActiveLevel()
+        {
+            if ((levelsSerializedProperty.arraySize > 0) && PlayerPrefs.HasKey(PREFS_LEVEL))
+            {
+                CustomList.SelectedIndex = Mathf.Clamp(PlayerPrefs.GetInt(PREFS_LEVEL, 0), 0,
+                    levelsSerializedProperty.arraySize - 1);
+            }
+        }
 
         private string GetUniqueLevelNumber()
         {
@@ -625,25 +633,34 @@ namespace VahTyah
             while (true)
             {
                 string formattedNumber = FormatNumber(levelNumber);
-                // string path = LevelEditorBase.GetProjectPath() + GetRelativeLevelAssetPathByNumber(formattedNumber);
+                string path = Application.dataPath.Replace("Assets", string.Empty) +
+                              GetRelativeLevelAssetPathByNumber(formattedNumber);
 
-                // if (!File.Exists(path))
-                // {
-                // return formattedNumber;
-                // }
+                if (!File.Exists(path))
+                {
+                    return formattedNumber;
+                }
 
                 levelNumber++;
             }
         }
 
-        // private static string GetRelativeLevelAssetPathByNumber(string levelNumber)
-        // {
-        //     return LevelEditorBase.Instance. LEVELS_FOLDER_PATH + PATH_SEPARATOR + LEVEL_PREFIX + levelNumber + ASSET_SUFFIX;
-        // }
+        private string GetRelativeLevelAssetPathByNumber(string levelNumber)
+        {
+            return LevelFolderPath + PATH_SEPARATOR + LEVEL_PREFIX + levelNumber + ASSET_SUFFIX;
+        }
 
         private static string FormatNumber(int number)
         {
             return number.ToString(FORMAT_TYPE);
+        }
+
+        private string FormatLevelNumber(int number)
+        {
+            int maxNumber = levelsSerializedProperty.arraySize;
+            int digits = maxNumber.ToString().Length;
+            string format = new string('0', digits);
+            return number.ToString(format).PadRight(digits);
         }
 
         #endregion
@@ -673,7 +690,7 @@ namespace VahTyah
             SetLevelLabels();
             AssetDatabase.SaveAssets();
 
-            Debug.Log($"Moved level from position {fromIndex + 1} to {toIndex + 1}");
+            Debug.Log($"Moved level from position {FormatLevelNumber(fromIndex + 1)} to {FormatLevelNumber(toIndex + 1)}");
         }
 
         #endregion
@@ -690,13 +707,13 @@ namespace VahTyah
             private int originalIndex;
             private int arraySize;
             private int newPosition;
-            private LevelsHandler levelsHandler;
+            private LevelsHandlerBase _levelsHandlerBase;
 
-            public void SetData(int originalIndex, int arraySize, LevelsHandler levelsHandler)
+            public void SetData(int originalIndex, int arraySize, LevelsHandlerBase levelsHandlerBase)
             {
                 this.originalIndex = originalIndex;
                 this.arraySize = arraySize;
-                this.levelsHandler = levelsHandler;
+                _levelsHandlerBase = levelsHandlerBase;
                 newPosition = originalIndex + 1; // Convert to 1-based
             }
 
@@ -727,7 +744,7 @@ namespace VahTyah
 
                 if (GUILayout.Button(MOVE_BUTTON_LABEL))
                 {
-                    levelsHandler.MoveLevel(originalIndex, newPosition - 1);
+                    _levelsHandlerBase.MoveLevel(originalIndex, newPosition - 1);
                     Close();
                 }
 

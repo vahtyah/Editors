@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using VahTyah.List;
 
-namespace VahTyah.List
+namespace VahTyah
 {
     [CreateAssetMenu(fileName = "StylesDatabase", menuName = "Custom List/List Styles Database", order = 1)]
     public class ListStylesDatabase : ScriptableObject
@@ -43,6 +44,7 @@ namespace VahTyah.List
             return names;
         }
 
+        [Button]
         public void AddDefaultStyle()
         {
             CustomListStyle style = new CustomListStyle();

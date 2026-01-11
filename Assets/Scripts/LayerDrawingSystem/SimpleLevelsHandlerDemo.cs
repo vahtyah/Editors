@@ -5,11 +5,10 @@ using VahTyah;
 using VahTyah.List;
 using EditorStyles = UnityEditor.EditorStyles;
 using Random = UnityEngine.Random;
-using SimpleCustomList = Tyah.List.SimpleCustomList;
 
 public class SimpleLevelsHandlerDemo :  EditorWindow
 {
-    [System.Serializable]
+    [Serializable]
     public class TestItem
     {
         public string name = "New Item";
@@ -134,7 +133,7 @@ public class SimpleLevelsHandlerDemo :  EditorWindow
 
     private void AddItem(ItemType type)
     {
-        System.Array.Resize(ref items, items.Length + 1);
+        Array.Resize(ref items, items.Length + 1);
         
         string typeName = type.ToString();
         items[items.Length - 1] = new TestItem 
