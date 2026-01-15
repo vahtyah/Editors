@@ -78,7 +78,7 @@ namespace VahTyah
         private Object levelsDatabase;
         private SerializedObject levelsDatabaseSerializedObject;
         private SerializedProperty levelsSerializedProperty;
-        private SimpleCustomList customList;
+        private CustomList customList;
 
         #endregion
 
@@ -117,7 +117,7 @@ namespace VahTyah
             set => customList.IgnoreDragEvents = value;
         }
 
-        public SimpleCustomList CustomList => customList;
+        public CustomList CustomList => customList;
 
         public int LevelsCount => levelsSerializedProperty.arraySize;
 
@@ -162,7 +162,7 @@ namespace VahTyah
         private void SetupCustomList()
         {
             // Create list with custom label callback
-            customList = new SimpleCustomList(
+            customList = new CustomList(
                 levelsDatabaseSerializedObject,
                 levelsSerializedProperty,
                 GetLevelLabel

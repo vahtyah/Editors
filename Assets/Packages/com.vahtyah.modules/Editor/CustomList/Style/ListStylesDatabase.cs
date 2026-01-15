@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using VahTyah.List;
-
 namespace VahTyah
 {
-    [CreateAssetMenu(fileName = "StylesDatabase", menuName = "Custom List/List Styles Database", order = 1)]
+    // [CreateAssetMenu(fileName = "StylesDatabase", menuName = "Custom List/List Styles Database", order = 1)]
     public class ListStylesDatabase : ScriptableObject
     {
         [SerializeField, BoxGroup("Components", "Components") ] private List<CustomListStyle> styles = new List<CustomListStyle>();

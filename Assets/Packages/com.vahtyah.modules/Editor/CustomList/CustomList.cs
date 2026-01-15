@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace VahTyah
 {
-    public class SimpleCustomList
+    public class CustomList
     {
         // Data
         private SerializedObject serializedObject;
@@ -232,7 +232,7 @@ namespace VahTyah
 
         #region Constructors
 
-        public SimpleCustomList(SerializedObject serializedObject, SerializedProperty elements,
+        public CustomList(SerializedObject serializedObject, SerializedProperty elements,
             string labelPropertyName)
         {
             this.serializedObject = serializedObject;
@@ -243,7 +243,7 @@ namespace VahTyah
             LoadCustomStyle();
         }
 
-        public SimpleCustomList(SerializedObject serializedObject, SerializedProperty elements,
+        public CustomList(SerializedObject serializedObject, SerializedProperty elements,
             GetLabelDelegate getLabelCallback)
         {
             this.serializedObject = serializedObject;
@@ -254,7 +254,7 @@ namespace VahTyah
             LoadCustomStyle();
         }
 
-        public SimpleCustomList(SerializedObject serializedObject, List<SerializedProperty> propertyList,
+        public CustomList(SerializedObject serializedObject, List<SerializedProperty> propertyList,
             string labelPropertyName)
         {
             this.serializedObject = serializedObject;
@@ -265,7 +265,7 @@ namespace VahTyah
             LoadCustomStyle();
         }
 
-        public SimpleCustomList(SerializedObject serializedObject, List<SerializedProperty> propertyList,
+        public CustomList(SerializedObject serializedObject, List<SerializedProperty> propertyList,
             GetLabelDelegate getLabelCallback)
         {
             this.serializedObject = serializedObject;
@@ -276,7 +276,7 @@ namespace VahTyah
             LoadCustomStyle();
         }
 
-        public SimpleCustomList(IList elements, GetLabelDelegate getLabelCallback)
+        public CustomList(IList elements, GetLabelDelegate getLabelCallback)
         {
             this.getLabelCallback = getLabelCallback;
             useLabelProperty = false;
