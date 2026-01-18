@@ -18,18 +18,23 @@ namespace VahTyah
     public class TestScript : MonoBehaviour
     {
         [BoxGroup("Player", "⚔️ Player Settings", 0)]
+        [OnValueChanged("OnPlayerNameChanged")]
         public string playerName = "Hero";
 
         [SerializeField, BoxGroup("Player")]
+        [OnValueChanged("OnHealthChanged")]
         private int health = 100;
 
         [BoxGroup("Player")]
+        [OnValueChanged("OnSpeedChanged")]
         public float speed = 5f;
 
         [BoxGroup("Enemy", "👾 Enemy Settings", 1)]
+        [OnValueChanged("OnHealthChanged")]
         public int enemyCount = 10;
 
         [BoxGroup("Enemy")]
+        [AutoRef(RefSource.Parent)]
         public GameObject enemyPrefab;
 
         [BoxGroup("Audio", "🔊 Audio Settings", 2)]
@@ -87,6 +92,24 @@ namespace VahTyah
         // [AssetRef("GameConfig", "Assets/Data")]
         // public GameConfig config;
 
+        // === Multiple Attributes Examples ===
+        
+        // AutoRef + OnValueChanged: Shows both [🔄] and [▶] buttons
+        [AutoRef(RefSource.Self)]
+        [OnValueChanged("OnRigidbodyChanged")]
+        public Rigidbody trackedRb;
+        
+        // AutoRef + OnValueChanged inside group
+        [BoxGroup("Refs")]
+        [AutoRef(RefSource.Children)]
+        [OnValueChanged("OnAudioSourceChanged")]
+        public AudioSource trackedAudio;
+        
+        // AssetRef + OnValueChanged
+        [AssetRef]
+        [OnValueChanged("OnMaterialChanged")]
+        public Material trackedMaterial;
+
         // Ungrouped properties
         public string ungroupedField = "I'm free!";
         public int anotherField = 42;
@@ -101,6 +124,38 @@ namespace VahTyah
         private void ButtonOutsideGroup()
         {
             Debug.Log("Button outside group clicked!");
+        }
+
+        // === OnValueChanged Callbacks ===
+        
+        private void OnPlayerNameChanged()
+        {
+            Debug.Log($"Player name changed to: {playerName}");
+        }
+
+        private void OnHealthChanged(int newHealth)
+        {
+            Debug.Log($"Health changed to: {newHealth}");
+        }
+
+        private void OnSpeedChanged()
+        {
+            Debug.Log($"Speed changed to: {speed}");
+        }
+
+        private void OnRigidbodyChanged(Rigidbody rb)
+        {
+            Debug.Log($"Rigidbody changed to: {(rb != null ? rb.name : "null")}");
+        }
+
+        private void OnAudioSourceChanged()
+        {
+            Debug.Log($"AudioSource changed to: {(trackedAudio != null ? trackedAudio.name : "null")}");
+        }
+
+        private void OnMaterialChanged(Material mat)
+        {
+            Debug.Log($"Material changed to: {(mat != null ? mat.name : "null")}");
         }
     }
 }
