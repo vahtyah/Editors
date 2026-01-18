@@ -1,0 +1,9 @@
+[submodule "Assets/Packages/com.vahtyah.core"]
+	path = Assets/Packages/com.vahtyah.core
+	url = https://github.com/vahtyah/com.vahtyah.core.git
+[submodule "Assets/Packages/com.vahtyah.level-editor"]
+	path = Assets/Packages/com.vahtyah.level-editor
+	url = https://github.com/vahtyah/com.vahtyah.level-editor.git
+[submodule "Assets/Packages/com.vahtyah.inspector"]
+	path = Assets/Packages/com.vahtyah.inspector
+	url = https://github.com/vahtyah/com.vahtyah.inspector.git
