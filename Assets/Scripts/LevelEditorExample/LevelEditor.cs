@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using VahTyah;
+using VahTyah.LevelEditor;
 
 public class LevelEditor : LevelEditorBase
 {

@@ -19,7 +19,7 @@ MonoBehaviour:
         layers:
         - enabled: 1
           type: 1
-          color: {r: 0.764151, g: 0.27033645, b: 0.27033645, a: 1}
+          color: {r: 0.302, g: 0.302, b: 0.302, a: 1}
           gradientEndColor: {r: 0, g: 0, b: 0, a: 1}
           gradientDirection: 1
           padding:

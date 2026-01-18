@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using VahTyah.Core;
+using VahTyah.LevelEditor;
 
 namespace VahTyah
 {

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using VahTyah;
+using VahTyah.Inspector;
 
 [CreateAssetMenu(fileName = "ColorPalette", menuName = "ColorPalette", order = 0)]
 public class ColorPalette : ScriptableObject
