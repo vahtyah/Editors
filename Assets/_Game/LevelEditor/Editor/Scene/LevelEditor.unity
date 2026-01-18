@@ -318,6 +318,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1905219042}
   - component: {fileID: 1905219041}
+  - component: {fileID: 1905219044}
+  - component: {fileID: 1905219043}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -337,24 +339,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ff8deeeb8c047189c5883ce7e4d38ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerName: Hero
-  health: 100
-  speed: 5
-  enemyCount: 10
-  enemyPrefab: {fileID: 0}
-  enemyMaterial: {fileID: 0}
+  playerName: 87878
+  health: 327
+  speed: 6.33
+  enemyCount: 62
+  enemyPrefab: {fileID: 1905219040}
   enableSound: 1
   volume: 0.8
   soundEffects: []
-  backgroundMusic: {fileID: 0}
-  playerIcon: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  backgroundTexture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
-  playerMesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+  selfTransform: {fileID: 1905219042}
+  rb: {fileID: 1905219043}
+  childCollider: {fileID: 1905219044}
+  childRenderer: {fileID: 0}
+  parentCanvas: {fileID: 0}
+  animator: {fileID: 0}
+  audioSource: {fileID: 0}
+  anyMaterial: {fileID: 2100000, guid: dcca2e648667d614389748e0dd127016, type: 2}
+  namedMaterial: {fileID: 0}
+  trackedRb: {fileID: 1905219043}
+  trackedAudio: {fileID: 0}
+  trackedMaterial: {fileID: 2100000, guid: dcca2e648667d614389748e0dd127016, type: 2}
+  requiredTransform: {fileID: 0}
+  spawnPoint: {fileID: 0}
+  criticalAudio: {fileID: 0}
+  requiredName: 777
+  requiredCollider: {fileID: 1905219044}
+  requiredAnimator: {fileID: 0}
+  lockedValue: 5555
+  lockedName: Cannot edit by default
+  lockedRequiredRef: {fileID: 651626822}
+  maxHealth: 100
   ungroupedField: I'm free!
-  anotherField: 42
-  largePreviewSprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  prefabWithLeftPreview: {fileID: 656246868}
-  materialWithRightPreview: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  anotherField: 100
 --- !u!4 &1905219042
 Transform:
   m_ObjectHideFlags: 0
@@ -364,12 +380,62 @@ Transform:
   m_GameObject: {fileID: 1905219040}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.036019206, y: 0.0047489405, z: 0.03280276}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: -0.036019206, y: -275.01678, z: 0.03280276}
+  m_LocalScale: {x: 9.58, y: 9.58, z: 9.58}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &1905219043
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905219040}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!136 &1905219044
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905219040}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 14.44
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

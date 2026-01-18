@@ -97,6 +97,7 @@ namespace VahTyah
         // AutoRef + OnValueChanged: Shows both [🔄] and [▶] buttons
         [AutoRef(RefSource.Self)]
         [OnValueChanged("OnRigidbodyChanged")]
+        [Required("Tuan")]
         public Rigidbody trackedRb;
         
         // AutoRef + OnValueChanged inside group
@@ -109,6 +110,54 @@ namespace VahTyah
         [AssetRef]
         [OnValueChanged("OnMaterialChanged")]
         public Material trackedMaterial;
+
+        // === Required Examples ===
+        
+        // Required reference - shows warning icon if null
+        [Required]
+        public Transform requiredTransform;
+        
+        // Required with custom message
+        [Required("Player needs a spawn point!")]
+        public Transform spawnPoint;
+        
+        // Required as error (red icon)
+        [Required("Critical: AudioClip is missing!", isError: true)]
+        public AudioClip criticalAudio;
+        
+        // Required string - warns if empty
+        [Required]
+        public string requiredName;
+        
+        // Required + AutoRef: Shows warning + refresh button
+        [Required]
+        [AutoRef(RefSource.Children)]
+        public Collider requiredCollider;
+        
+        // Required inside group
+        [BoxGroup("Refs")]
+        [Required("Animator is required for animations")]
+        public Animator requiredAnimator;
+
+        // === ReadOnly Examples ===
+        
+        // ReadOnly field - locked by default, click to unlock
+        [ReadOnly]
+        public int lockedValue = 999;
+        
+        // ReadOnly string
+        [ReadOnly]
+        public string lockedName = "Cannot edit by default";
+        
+        // ReadOnly + Required: Lock icon + warning icon
+        [ReadOnly]
+        [Required]
+        public Transform lockedRequiredRef;
+        
+        // ReadOnly inside group
+        [BoxGroup("Player")]
+        [ReadOnly]
+        public float maxHealth = 100f;
 
         // Ungrouped properties
         public string ungroupedField = "I'm free!";
