@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -41,6 +41,51 @@ namespace VahTyah
         
         [BoxGroup("Audio")]
         public List<string> soundEffects;
+
+        // === AutoRef Examples ===
+        
+        // Auto-get from same GameObject (default)
+        [AutoRef]
+        public Transform selfTransform;
+        
+        // Auto-get Rigidbody from self
+        [AutoRef(RefSource.Self)]
+        public Rigidbody rb;
+        
+        // Auto-find in children
+        [AutoRef(RefSource.Children)]
+        public Collider childCollider;
+        
+        // Auto-find in children, including inactive
+        [AutoRef(RefSource.Children, includeInactive: true)]
+        public MeshRenderer childRenderer;
+        
+        // Auto-find in parent hierarchy
+        [AutoRef(RefSource.Parent)]
+        public Canvas parentCanvas;
+        
+        // AutoRef inside a group
+        [BoxGroup("Refs", "🔗 References", 3)]
+        [AutoRef(RefSource.Self)]
+        public Animator animator;
+        
+        [BoxGroup("Refs")]
+        [AutoRef(RefSource.Children)]
+        public AudioSource audioSource;
+
+        // === AssetRef Examples ===
+        
+        // Find first Material in project
+        [AssetRef]
+        public Material anyMaterial;
+        
+        // Find Material by name
+        [AssetRef("DefaultMaterial")]
+        public Material namedMaterial;
+        
+        // Find ScriptableObject in specific folder
+        // [AssetRef("GameConfig", "Assets/Data")]
+        // public GameConfig config;
 
         // Ungrouped properties
         public string ungroupedField = "I'm free!";
