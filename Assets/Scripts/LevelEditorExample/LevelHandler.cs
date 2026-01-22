@@ -8,4 +8,6 @@ public class LevelHandler : LevelsHandlerBase
     public override Type GetLevelDatabaseType => typeof(LevelDatabase);
     public override Type GetLevelType => typeof(LevelData);
     public override string LevelFolderPath => "Assets/_Project/Data/Levels";
+    
+    
 }

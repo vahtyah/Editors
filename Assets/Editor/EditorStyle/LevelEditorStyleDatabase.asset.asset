@@ -46,7 +46,9 @@ MonoBehaviour:
       enableSearch: 0
       enableFooterAddButton: 1
       enableFooterRemoveButton: 1
-      enableElementRemoveButton: 0
+      enableFooterReloadButton: 1
+      enableElementRemoveButton: 1
+      enableAddDropdown: 0
       ignoreDragEvents: 0
       minHeight: 200
       minWidth: 150

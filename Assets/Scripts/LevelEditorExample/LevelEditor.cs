@@ -39,6 +39,10 @@ public class LevelsPanel : IEditorPanel
     public string Name => "Levels";
     private Vector2 scrollPosition;
 
+    public void Initialize()
+    {
+    }
+
     public void OnEnable()
     {
         // Khởi tạo tài nguyên cho panel Levels
@@ -82,6 +86,10 @@ public class TilesPanel : IEditorPanel
     public string Name => "Tiles";
     private Vector2 scrollPosition;
 
+    public void Initialize()
+    {
+    }
+
     public void OnEnable()
     {
         // Khởi tạo tài nguyên cho panel Tiles
@@ -120,6 +128,10 @@ public class TilesPanel : IEditorPanel
 public class ObjectsPanel : IEditorPanel
 {
     public string Name => "Objects";
+
+    public void Initialize()
+    {
+    }
 
     public void OnEnable()
     {
