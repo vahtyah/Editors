@@ -6,7 +6,6 @@ using VahTyah.LevelEditor;
 
 public class LevelEditor : LevelEditorBase
 {
-    protected override LevelsHandlerBase GetLevelHandler => new LevelHandler();
     private PanelNavigator panelNavigator;
 
     protected override void OnEnable()

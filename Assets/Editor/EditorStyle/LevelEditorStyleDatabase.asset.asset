@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2950536a05e4cfa9d81f6f69f5b9f7f, type: 3}
   m_Name: LevelEditorStyleDatabase.asset
   m_EditorClassIdentifier: 
-  defaultStyleIndex: 0
   styles:
   - globalBackground:
       backgroundConfig:
@@ -47,6 +46,8 @@ MonoBehaviour:
       enableFooterAddButton: 1
       enableFooterRemoveButton: 1
       enableFooterReloadButton: 1
+      enableKeyboardNavigation: 1
+      enableScrollWheelNavigation: 1
       enableElementRemoveButton: 1
       enableAddDropdown: 0
       ignoreDragEvents: 0
@@ -259,3 +260,10 @@ MonoBehaviour:
             bottom: 0
           borderWidth: {x: 100, y: 100, z: 100, w: 100}
           borderRadius: {x: 4, y: 4, z: 0, w: 0}
+  levelEditorScenePath: Assets/LevelEditor/Editor/Scenes/LevelEditor.unity
+  levelEditorSceneName: LevelEditor
+  levelEditorConfig:
+    levelPropertyName: _levelData
+    levelDatabaseTypeName: LevelDatabase
+    levelTypeName: LevelData
+    levelFolderPath: Assets/_Project/Data/Levels
