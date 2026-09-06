@@ -32,6 +32,6 @@ public static class FeelDemoMenu
         EditorGUIUtility.PingObject(go);
         EditorSceneManager.MarkSceneDirty(go.scene);
 
-        Debug.Log("[FeelDemo] Đã tạo 'Feel Demo' + 3 cube. Chỉnh feel trong Inspector, bấm Play để xem.");
+        Debug.Log("[FeelDemo] Đã tạo 'Feel Demo' + lưới cube (mỗi cube 1 feedback). Chỉnh trong Inspector, bấm Play để xem.");
     }
 }
