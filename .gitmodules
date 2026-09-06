@@ -7,3 +7,6 @@
 [submodule "Assets/Packages/com.vahtyah.inspector"]
 	path = Assets/Packages/com.vahtyah.inspector
 	url = https://github.com/vahtyah/com.vahtyah.inspector.git
+[submodule "Assets/Packages/com.vahtyah.feel"]
+	path = Assets/Packages/com.vahtyah.feel
+	url = https://github.com/vahtyah/com.vahtyah.feel.git
