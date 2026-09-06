@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 10
+  serializedVersion: 9
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -42,8 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 13
-  m_BakeOnSceneLoad: 0
+  serializedVersion: 12
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,6 +66,9 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
+    m_FinalGather: 0
+    m_FinalGatherFiltering: 1
+    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -144,14 +147,15 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 651626820}
   m_Enabled: 1
-  serializedVersion: 12
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize2D: {x: 10, y: 10}
+  m_CookieSize: 10
   m_Shadows:
     m_Type: 2
     m_Resolution: -1
@@ -195,12 +199,8 @@ Light:
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
-  m_ForceVisible: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
-  m_LightUnit: 1
-  m_LuxAtDistance: 1
-  m_EnableSpotReflector: 1
 --- !u!4 &651626822
 Transform:
   m_ObjectHideFlags: 0
@@ -404,10 +404,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: VahTyah.Feel.Runtime::VahTyah.Feel.FeelPlayer
   Feedbacks:
-  - rid: 5812471581098377488
   - rid: 5812471581098377541
-  - rid: 5812471581098377487
+  - rid: 5812471581098377488
   - rid: 5812471581098377542
+  - rid: 5812471581098377487
   PlayOnStart: 0
   CancelPreviousOnPlay: 0
   references:
@@ -421,10 +421,13 @@ MonoBehaviour:
         TimingMode: 0
         Delay: 0
         Target: {fileID: 1853473218}
-        Strength: {x: 0.35, y: 0.35, z: 0.35}
-        TweenDuration: 0.45
-        Frequency: 10
-        DampingRatio: 1
+        Settings:
+          Inline:
+            Strength: {x: 0.2, y: 0.2, z: 0.2}
+            TweenDuration: 0.3
+            Frequency: 10
+            DampingRatio: 1
+          Config: {fileID: 11400000, guid: 7d87ece3b9f45c143b7ed63ea3c79559, type: 2}
     - rid: 5812471581098377488
       type: {class: PositionPunchFeedback, ns: VahTyah.Feel, asm: VahTyah.Feel.Runtime}
       data:
@@ -433,10 +436,13 @@ MonoBehaviour:
         TimingMode: 1
         Delay: 0
         Target: {fileID: 1853473218}
-        Strength: {x: 0, y: 0.6, z: 0}
-        TweenDuration: 0.45
-        Frequency: 10
-        DampingRatio: 1
+        Settings:
+          Inline:
+            Strength: {x: 0, y: 0.5, z: 0}
+            TweenDuration: 0.3
+            Frequency: 10
+            DampingRatio: 1
+          Config: {fileID: 11400000, guid: b123e6bb5cd3bbd448d03ddfa1ca44be, type: 2}
     - rid: 5812471581098377541
       type: {class: ScalePunchFeedback, ns: VahTyah.Feel, asm: VahTyah.Feel.Runtime}
       data:
@@ -444,11 +450,14 @@ MonoBehaviour:
         Label: Scale Punch
         TimingMode: 0
         Delay: 0
-        Target: {fileID: 0}
-        Strength: {x: 0.35, y: 0.35, z: 0.35}
-        TweenDuration: 0.45
-        Frequency: 10
-        DampingRatio: 1
+        Target: {fileID: 1853473218}
+        Settings:
+          Inline:
+            Strength: {x: 0.2, y: 0.2, z: 0.2}
+            TweenDuration: 0.5
+            Frequency: 10
+            DampingRatio: 1
+          Config: {fileID: 11400000, guid: 8adfa0a10eebb3c4093020a362fe40c5, type: 2}
     - rid: 5812471581098377542
       type: {class: ScalePunchFeedback, ns: VahTyah.Feel, asm: VahTyah.Feel.Runtime}
       data:
@@ -456,11 +465,14 @@ MonoBehaviour:
         Label: Scale Punch
         TimingMode: 0
         Delay: 0
-        Target: {fileID: 0}
-        Strength: {x: 0.35, y: 0.35, z: 0.35}
-        TweenDuration: 0.45
-        Frequency: 10
-        DampingRatio: 1
+        Target: {fileID: 1853473218}
+        Settings:
+          Inline:
+            Strength: {x: 0.2, y: 0.2, z: 0.2}
+            TweenDuration: 0.3
+            Frequency: 10
+            DampingRatio: 1
+          Config: {fileID: 0}
 --- !u!23 &1853473220
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -478,11 +490,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -504,11 +511,9 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &1853473221
 BoxCollider:
@@ -624,10 +629,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1905219040}
-  serializedVersion: 5
+  serializedVersion: 4
   m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_Drag: 0
+  m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -730,22 +735,28 @@ MonoBehaviour:
         TimingMode: 0
         Delay: 0
         Target: {fileID: 2019349121}
-        Strength: {x: 0.4, y: 0.4, z: 0.4}
-        TweenDuration: 0.4
-        Frequency: 10
-        DampingRatio: 1
+        Settings:
+          Inline:
+            Strength: {x: 0.2, y: 0.2, z: 0.2}
+            TweenDuration: 0.3
+            Frequency: 10
+            DampingRatio: 1
+          Config: {fileID: 11400000, guid: 7d87ece3b9f45c143b7ed63ea3c79559, type: 2}
     - rid: 5812471581098377494
       type: {class: ScalePunchFeedback, ns: VahTyah.Feel, asm: VahTyah.Feel.Runtime}
       data:
         Active: 1
-        Label: 
+        Label: 223
         TimingMode: 0
         Delay: 0
         Target: {fileID: 2019349121}
-        Strength: {x: 0.2, y: 0.2, z: 0.2}
-        TweenDuration: 0.3
-        Frequency: 10
-        DampingRatio: 1
+        Settings:
+          Inline:
+            Strength: {x: 0.2, y: 0.2, z: 0.2}
+            TweenDuration: 0.3
+            Frequency: 10
+            DampingRatio: 1
+          Config: {fileID: 11400000, guid: 7d87ece3b9f45c143b7ed63ea3c79559, type: 2}
 --- !u!23 &2019349123
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -763,11 +774,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -789,11 +795,9 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &2019349124
 BoxCollider:
@@ -888,10 +892,13 @@ MonoBehaviour:
         TimingMode: 0
         Delay: 0
         Target: {fileID: 2105501994}
-        Strength: {x: 0, y: 0.6, z: 0}
-        TweenDuration: 0.35
-        Frequency: 10
-        DampingRatio: 1
+        Settings:
+          Inline:
+            Strength: {x: 0.2, y: 0.2, z: 0.2}
+            TweenDuration: 0.3
+            Frequency: 10
+            DampingRatio: 1
+          Config: {fileID: 0}
     - rid: 5812471581098377486
       type: {class: ScalePunchFeedback, ns: VahTyah.Feel, asm: VahTyah.Feel.Runtime}
       data:
@@ -900,10 +907,13 @@ MonoBehaviour:
         TimingMode: 0
         Delay: 0
         Target: {fileID: 2105501994}
-        Strength: {x: 0.6, y: 0, z: 0}
-        TweenDuration: 0.35
-        Frequency: 10
-        DampingRatio: 1
+        Settings:
+          Inline:
+            Strength: {x: 0.2, y: 0.2, z: 0.2}
+            TweenDuration: 0.3
+            Frequency: 10
+            DampingRatio: 1
+          Config: {fileID: 11400000, guid: 8adfa0a10eebb3c4093020a362fe40c5, type: 2}
     - rid: 5812471581098377511
       type: {class: PositionPunchFeedback, ns: VahTyah.Feel, asm: VahTyah.Feel.Runtime}
       data:
@@ -912,10 +922,13 @@ MonoBehaviour:
         TimingMode: 0
         Delay: 0
         Target: {fileID: 2105501994}
-        Strength: {x: 0, y: 0.61, z: 0}
-        TweenDuration: 2
-        Frequency: 10
-        DampingRatio: 1
+        Settings:
+          Inline:
+            Strength: {x: 0, y: 0.5, z: 0}
+            TweenDuration: 0.3
+            Frequency: 10
+            DampingRatio: 1
+          Config: {fileID: 0}
 --- !u!23 &2105501996
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -933,11 +946,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -959,11 +967,9 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!65 &2105501997
 BoxCollider:

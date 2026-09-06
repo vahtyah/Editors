@@ -103,8 +103,10 @@ public class FeelDemo : MonoBehaviour
         {
             Label = "Punch",
             Target = t,
-            Strength = Vector3.one * 0.4f,
-            TweenDuration = 0.4f
+            Settings = new FeelParam<ScalePunchSettings>
+            {
+                Inline = new ScalePunchSettings { Strength = Vector3.one * 0.4f, TweenDuration = 0.4f, Frequency = 10, DampingRatio = 1f }
+            }
         });
         MarkDirty(player);
     }
@@ -118,16 +120,20 @@ public class FeelDemo : MonoBehaviour
             Label = "Punch Y",
             Target = t,
             TimingMode = FeelTimingMode.AfterPrevious,
-            Strength = new Vector3(0f, 0.6f, 0f),
-            TweenDuration = 0.35f
+            Settings = new FeelParam<ScalePunchSettings>
+            {
+                Inline = new ScalePunchSettings { Strength = new Vector3(0f, 0.6f, 0f), TweenDuration = 0.35f, Frequency = 10, DampingRatio = 1f }
+            }
         });
         player.AddFeedback(new ScalePunchFeedback
         {
             Label = "Punch X",
             Target = t,
             TimingMode = FeelTimingMode.AfterPrevious,
-            Strength = new Vector3(0.6f, 0f, 0f),
-            TweenDuration = 0.35f
+            Settings = new FeelParam<ScalePunchSettings>
+            {
+                Inline = new ScalePunchSettings { Strength = new Vector3(0.6f, 0f, 0f), TweenDuration = 0.35f, Frequency = 10, DampingRatio = 1f }
+            }
         });
         MarkDirty(player);
     }
@@ -142,16 +148,20 @@ public class FeelDemo : MonoBehaviour
             Label = "Scale Punch",
             Target = t,
             TimingMode = FeelTimingMode.AfterPrevious,
-            Strength = Vector3.one * 0.35f,
-            TweenDuration = 0.45f
+            Settings = new FeelParam<ScalePunchSettings>
+            {
+                Inline = new ScalePunchSettings { Strength = Vector3.one * 0.35f, TweenDuration = 0.45f, Frequency = 10, DampingRatio = 1f }
+            }
         });
         player.AddFeedback(new PositionPunchFeedback
         {
             Label = "Position Punch",
             Target = t,
             TimingMode = FeelTimingMode.WithPrevious,
-            Strength = new Vector3(0f, 0.6f, 0f),
-            TweenDuration = 0.45f
+            Settings = new FeelParam<PositionPunchSettings>
+            {
+                Inline = new PositionPunchSettings { Strength = new Vector3(0f, 0.6f, 0f), TweenDuration = 0.45f, Frequency = 10, DampingRatio = 1f }
+            }
         });
         MarkDirty(player);
     }
