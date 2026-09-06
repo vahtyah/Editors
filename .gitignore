@@ -12,6 +12,14 @@
 /[Uu]ser[Ss]ettings/
 *.log
 
+# Cache/generated của Unity lỡ bị copy nhầm vào Assets/ (bản thật nằm ở root project)
+/[Aa]ssets/[Ll]ibrary/
+/[Aa]ssets/[Tt]emp/
+/[Aa]ssets/[Ll]ogs/
+/[Aa]ssets/[Uu]ser[Ss]ettings/
+/[Aa]ssets/[Oo]bj/
+/[Aa]ssets/ProjectSettings/
+
 # By default unity supports Blender asset imports, *.blend1 blender files do not need to be commited to version control.
 *.blend1
 *.blend1.meta
@@ -97,3 +105,5 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+.idea
+.idea
