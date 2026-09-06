@@ -7,6 +7,7 @@
 | core | https://github.com/vahtyah/com.vahtyah.core |
 | inspector | https://github.com/vahtyah/com.vahtyah.inspector |
 | level-editor | https://github.com/vahtyah/com.vahtyah.level-editor |
+| feel | https://github.com/vahtyah/com.vahtyah.feel |
 
 ---
 
@@ -205,7 +206,8 @@ Thêm vào `Packages/manifest.json`:
   "dependencies": {
     "com.vahtyah.core": "https://github.com/vahtyah/com.vahtyah.core.git",
     "com.vahtyah.inspector": "https://github.com/vahtyah/com.vahtyah.inspector.git",
-    "com.vahtyah.level-editor": "https://github.com/vahtyah/com.vahtyah.level-editor.git"
+    "com.vahtyah.level-editor": "https://github.com/vahtyah/com.vahtyah.level-editor.git",
+    "com.vahtyah.feel": "https://github.com/vahtyah/com.vahtyah.feel.git"
   }
 }
 ```
